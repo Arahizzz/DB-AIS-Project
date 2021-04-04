@@ -31,6 +31,7 @@ namespace DBAIS
             services.Configure<DbOptions>(Configuration.GetSection("Postgres"));
             services.AddSingleton<ProductsRepository>();
             services.AddSingleton<CustomerRepository>();
+            services.AddSingleton<EmployeeRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "DBAIS", Version = "v1"}); });
