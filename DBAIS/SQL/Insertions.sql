@@ -80,3 +80,46 @@ VALUES ('id9', 'Hanover', 'Mike', 'Denysovych', 'cashier', 1444, '1980-01-21', '
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code)
 VALUES ('id10', 'Stuart', 'Jeremy', 'Tarasovych', 'cashier', 1310, '1979-03-24', '2011-03-01', '0663356321', 'Lviv', 'Street10', 1010);
 --
+
+INSERT INTO public."Check" (check_number, id_employee, card_number, print_date, sum_total, vat) VALUES ('2428784833', 'id1', '2827353407381', '2021-04-15', 119.0000, 22.0000);
+INSERT INTO public."Check" (check_number, id_employee, card_number, print_date, sum_total, vat) VALUES ('9546921356', 'id3', '7121520341739', '2021-04-01', 265.2000, 30.0000);
+INSERT INTO public."Check" (check_number, id_employee, card_number, print_date, sum_total, vat) VALUES ('2428784834', 'id6', null, '2021-04-07', 76.0000, 19.0000);
+INSERT INTO public."Check" (check_number, id_employee, card_number, print_date, sum_total, vat) VALUES ('9546921358', 'id1', '7121520341739', '2021-04-06', 105.0000, 5.0000);
+INSERT INTO public."Check" (check_number, id_employee, card_number, print_date, sum_total, vat) VALUES ('9546921357', 'id3', '7121520341739', '2021-04-06', 2100.0000, 20.0000);
+INSERT INTO public."Check" (check_number,id_employee,card_number,print_date,sum_total,vat)
+VALUES ('100000000','id1','2827353407381','2021-04-04',200,2.5); -- 10 apples
+
+INSERT INTO public."Check" (check_number,id_employee,card_number,print_date,sum_total,vat)
+VALUES ('100000002','id1','2827353407381','2021-04-01',265,2.5); -- 5 apples 3 bananas (165)
+
+INSERT INTO public."Check" (check_number,id_employee,card_number,print_date,sum_total,vat)
+VALUES ('100000003','id1','0185586120586','2021-03-05',2000,2.5); -- Man`s Jacket
+
+INSERT INTO public."Check" (check_number,id_employee,card_number,print_date,sum_total,vat)
+VALUES ('100000004','id1','0185586120586','2021-03-20',360,2.5); -- 6 marmelades
+
+
+-- SALE
+
+INSERT INTO public.sale (upc, check_number, product_number, selling_price) VALUES ('502867184634', '2428784833', 5, 20.0000);
+INSERT INTO public.sale (upc, check_number, product_number, selling_price) VALUES ('502867184634', '9546921356', 3, 20.0000);
+INSERT INTO public.sale (upc, check_number, product_number, selling_price) VALUES ('359194108878', '9546921356', 3, 60.0000);
+INSERT INTO public.sale (upc, check_number, product_number, selling_price) VALUES ('502867184634', '2428784834', 3, 20.0000);
+INSERT INTO public.sale (upc, check_number, product_number, selling_price) VALUES ('502867184634', '9546921358', 5, 20.0000);
+INSERT INTO public.sale (upc, check_number, product_number, selling_price) VALUES ('305210625843', '9546921357', 1, 2000.0000);
+INSERT INTO public.sale (upc, check_number, product_number, selling_price) VALUES ('502867184634', '9546921357', 4, 20.0000);
+
+INSERT INTO public.sale (UPC,check_number,product_number,selling_price)
+VALUES ('502867184634','100000000',10,20); -- 10 apples
+--
+INSERT INTO public.sale (UPC,check_number,product_number,selling_price)
+VALUES ('502867184634','100000002',5,20); -- 5 apples
+
+INSERT INTO public.sale (UPC,check_number,product_number,selling_price)
+VALUES ('752320678217','100000002',3,55); -- 3 bananas
+--
+INSERT INTO public.sale (UPC,check_number,product_number,selling_price)
+VALUES ('305210625843','100000003',1,2000); -- 1 jacket
+
+INSERT INTO public.sale (UPC,check_number,product_number,selling_price)
+VALUES ('359194108878','100000000',6,60);-- 6 marmelades
