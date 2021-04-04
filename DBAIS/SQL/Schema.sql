@@ -51,7 +51,7 @@ CREATE TABLE "Check"
     card_number  varchar(13),
     print_date   date           not null,
     sum_total    decimal(13, 4) not null,
-    var          decimal(13, 4) not null,
+    vat          decimal(13, 4) not null,
     foreign key (id_employee) references Employee (id_employee)
         on update cascade
         on delete no action,
@@ -67,7 +67,7 @@ CREATE TABLE Store_Product
     id_product          int            not null,
     selling_price       decimal(13, 4) not null,
     products_number     int            not null,
-    promotional_product bool,
+    promotional_product bool           not null,
     foreign key (UPC_prom) references Store_Product (UPC)
         on update cascade
         on delete set null,
