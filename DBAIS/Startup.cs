@@ -32,6 +32,10 @@ namespace DBAIS
             services.AddSingleton<ProductsRepository>();
             services.AddSingleton<CustomerRepository>();
             services.AddSingleton<EmployeeRepository>();
+            services.AddSingleton<CheckRepository>();
+            services.AddSingleton<CustomerRepository>();
+            services.AddSingleton<StoreProductRepository>();
+            services.AddSingleton<CategoryRepository>();
 
             services.AddControllers();
             services.AddRazorPages();

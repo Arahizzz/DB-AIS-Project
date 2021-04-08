@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
+using DBAIS.Models;
 using DBAIS.Models.DTOs;
 using DBAIS.Options;
 using Microsoft.Extensions.Options;
@@ -78,6 +78,82 @@ namespace DBAIS.Repositories
                 info.Products = products;
                 list.Add(info);
             }
+        }
+
+        public async Task AddEmployee(Employee employee)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var command = new NpgsqlCommand(@"
+        insert into employee (id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)
+        values (@id, @surname, @name, @patronymic, @role, @salary, @date_of_birth, @date_of_start, @phone_number, @city, @street, @zip)
+"
+                , conn);
+            
+            command.Parameters.AddRange(new NpgsqlParameter[]
+            {
+                new ("id", employee.Id),
+                new ("surname", employee.Surname),
+                new ("name", employee.Name),
+                new ("patronymic", employee.Patronymic),
+                new ("role", employee.Role),
+                new ("salary", employee.Salary),
+                new ("date_of_birth", employee.DateOfBirth),
+                new ("date_of_start", employee.DateOfStart),
+                new ("phone_number", employee.PhoneNumber),
+                new ("city", employee.City),
+                new ("street", employee.Street),
+                new ("zip", employee.Zip)
+            });
+            
+            await conn.OpenAsync();
+            await command.PrepareAsync();
+            await command.ExecuteNonQueryAsync();
+        }
+        
+        public async Task EditEmployee(Employee employee)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var command = new NpgsqlCommand(@"
+        update employee set empl_surname = @surname, empl_name = @name, 
+        empl_patronymic = @patronymic, role = @role, salary = @salary, date_of_birth = @date_of_birth, 
+        date_of_start = @date_of_start, phone_number = @phone_number, city = @city, street = @street, zip_code = @zip
+        where id_employee = @id
+"
+                , conn);
+            
+            command.Parameters.AddRange(new NpgsqlParameter[]
+            {
+                new ("id", employee.Id),
+                new ("surname", employee.Surname),
+                new ("name", employee.Name),
+                new ("patronymic", employee.Patronymic),
+                new ("role", employee.Role),
+                new ("salary", employee.Salary),
+                new ("date_of_birth", employee.DateOfBirth),
+                new ("date_of_start", employee.DateOfStart),
+                new ("phone_number", employee.PhoneNumber),
+                new ("city", employee.City),
+                new ("street", employee.Street),
+                new ("zip", employee.Zip)
+            });
+            
+            await conn.OpenAsync();
+            await command.PrepareAsync();
+            await command.ExecuteNonQueryAsync();
+        }
+        
+        
+        public async Task DeleteEmployee(string id)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var command = new NpgsqlCommand(@"
+        delete from employee where id_employee = @id
+"
+                , conn);
+            command.Parameters.Add(new NpgsqlParameter<string>("id", id));
+            await conn.OpenAsync();
+            await command.PrepareAsync();
+            await command.ExecuteNonQueryAsync();
         }
     }
 }
