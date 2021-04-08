@@ -1,0 +1,12 @@
+﻿@page
+@model DBAIS.Pages.IndexModel
+
+@{
+    Layout = "_Shared/_Layout";
+}
+
+<h1>Checks</h1>
+@foreach(var check in Model.Purchases)
+{
+    <p>@check.CheckNumber</p>
+}
