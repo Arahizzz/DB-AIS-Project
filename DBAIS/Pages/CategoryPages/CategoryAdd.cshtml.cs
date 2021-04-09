@@ -12,7 +12,7 @@ namespace DBAIS.Pages
     public class CategoryAddModel : PageModel
     {
         private readonly CategoryRepository _categoryRepository;
-        public string Message { get; set; }
+        public string Message { get; set; } = string.Empty;
 
         public CategoryAddModel(CategoryRepository categoryRepository)
         {
