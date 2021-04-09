@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DBAIS.Pages
@@ -16,11 +17,25 @@ namespace DBAIS.Pages
             _categoryRepository = categoryRepository;
         }
 
-        public List<Category> Categories {get; set;}
+        public List<Models.Category> Categories {get; set;}
 
         public async Task OnGetAsync()
         {
             Categories = await _categoryRepository.GetCategoriesAlphabetical();
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            try
+            {
+                await _categoryRepository.DeleteCategory(id);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", "You can`t delete this category");
+            }
+            Categories = await _categoryRepository.GetCategoriesAlphabetical();
+            return Page();
         }
     }
 }

@@ -1,24 +1,24 @@
-﻿INSERT INTO public.category (category_number, category_name)
-VALUES (1, 'Fruits');
-INSERT INTO public.category (category_number, category_name)
-VALUES (2, 'Vegetables');
-INSERT INTO public.category (category_number, category_name)
-VALUES (3, 'Clothing');
-INSERT INTO public.category (category_number, category_name)
-VALUES (4, 'Sweets');
+﻿INSERT INTO public.category (category_name)
+VALUES ('Fruits');
+INSERT INTO public.category (category_name)
+VALUES ('Vegetables');
+INSERT INTO public.category (category_name)
+VALUES ('Clothing');
+INSERT INTO public.category (category_name)
+VALUES ('Sweets');
 
-INSERT INTO public.product (id_product, category_number, product_name, characteristics)
-VALUES (1, 1, 'Apple', 'Green');
-INSERT INTO public.product (id_product, category_number, product_name, characteristics)
-VALUES (2, 1, 'Banana', 'From Africa');
-INSERT INTO public.product (id_product, category_number, product_name, characteristics)
-VALUES (3, 2, 'Tomato', 'Red');
-INSERT INTO public.product (id_product, category_number, product_name, characteristics)
-VALUES (4, 3, 'Jacket', 'Men''s jacket');
-INSERT INTO public.product (id_product, category_number, product_name, characteristics)
-VALUES (5, 4, 'Chocolate', 'Roshen');
-INSERT INTO public.product (id_product, category_number, product_name, characteristics)
-VALUES (6, 4, 'Marmelade', 'From Belgium');
+INSERT INTO public.product (category_number, product_name, characteristics)
+VALUES (1, 'Apple', 'Green');
+INSERT INTO public.product (category_number, product_name, characteristics)
+VALUES (1, 'Banana', 'From Africa');
+INSERT INTO public.product (category_number, product_name, characteristics)
+VALUES (2, 'Tomato', 'Red');
+INSERT INTO public.product (category_number, product_name, characteristics)
+VALUES (3, 'Jacket', 'Men''s jacket');
+INSERT INTO public.product (category_number, product_name, characteristics)
+VALUES (4, 'Chocolate', 'Roshen');
+INSERT INTO public.product (category_number, product_name, characteristics)
+VALUES (4, 'Marmelade', 'From Belgium');
 
 INSERT INTO public.store_product (upc, upc_prom, id_product, selling_price, products_number, promotional_product)
 VALUES ('502867184634', null, 1, 20.0000, 350, false);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using DBAIS.Models;
@@ -11,10 +12,14 @@ namespace DBAIS.Pages
 {
     public class CategoryUpdateModel : PageModel
     {
-        [FromQuery(Name = "id")]
-        public int _categoryId { get; set; }
 
-        public Category _category { get; set; }
+        [BindProperty]
+        public Models.Category Category { get; set; }
+
+        [BindProperty]
+        [Required]
+        [MinLength(3)]
+        public string CategoryName { get; set; }
 
         private readonly CategoryRepository _categoryRepository;
 
@@ -23,10 +28,35 @@ namespace DBAIS.Pages
             _categoryRepository = categoryRepository;
         }
         
-        public async void OnGet()
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var categories = await _categoryRepository.GetCategoriesAlphabetical();
+            Category = categories.Find(x => x.Number.Equals(id));
+            if (Category == null)
+            {
+                return NotFound();
+            }
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync([FromRoute] int id)
         {
             var categories = await _categoryRepository.GetCategoriesAlphabetical();
-            _category = categories.Find(x => x.Number.Equals(_categoryId));
+            Category = categories.Find(x => x.Number.Equals(id));
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            else
+            {
+                var newCategory = new Models.Category { Number = id, Name = CategoryName };
+                await _categoryRepository.UpdateCategory(newCategory);
+                return Redirect("/category");
+            }
         }
     }
 }

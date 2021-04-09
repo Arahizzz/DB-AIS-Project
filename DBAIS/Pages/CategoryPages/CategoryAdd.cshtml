@@ -20,11 +20,7 @@
         </div>
     </nav>
     <!-- Content -->
-    <p>@Model.Message</p>
-    <form method="post">
-        <input type="text" name="categoryName" />
-        <input type="submit" asp-page-handler="post" value="Send" />
-    </form>
+    
     <div>
         <div class="row">
             <div class="col-6">
@@ -33,16 +29,27 @@
                 </p>
             </div>
         </div>
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
+            </div>
+        }
         <form method="post">
             <div class="row">
                 <div class="col-6">
-                    <input type="text" name="categoryName" class="form-control" placeholder="Category name">
+                    <input type="text" asp-for="CategoryName" class="form-control" placeholder="Category name"/>
                 </div>
             </div>
             <br />
             <div class="row">
                 <div class="col-2">
-                    <input type="submit" class="btn btn-success">
+                    <a href="/category">
+                        <button type="button" class="btn btn-secondary">Cancel</button>
+                    </a>
+                </div>
+                <div class="col-2">
+                    <input type="submit" class="btn btn-success" value="Create">
                 </div>
             </div>
         </form>

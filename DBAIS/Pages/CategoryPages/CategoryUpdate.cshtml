@@ -1,9 +1,8 @@
-﻿@page "/category/update"
+﻿@page "/category/update/{id:int}"
 @model DBAIS.Pages.CategoryUpdateModel
 @{
     Layout = "_Shared/_MasterLayoutPage";
 }
-
 <div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
@@ -20,27 +19,40 @@
     </nav>
     <!-- Content -->
     <div>
-        <div class="row">
-            <div class="col-6">
-                <p class="text-dark fw-bold">
-                    Current category: @Model._category.Name
-                </p>
+        @if (Model.Category != null && Model.Category.Name != "")
+        {
+            <div class="row">
+                <div class="col-6">
+                    <p class="text-dark fw-bold">
+                        Current category: @Model.Category.Name
+                    </p>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-6">
-                <input type="text" class="form-control" placeholder="Category name" value="@Model._category.Name">
+        }
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
             </div>
-        </div>
-        <br/>
-        <div class="row">
-            <div class="col-2">
-                <button type="submit" class="btn btn-primary">Update category</button>
+        }
+        <form method="post">
+            <div class="row">
+                <div class="col-6">
+                    <input type="text" asp-for="CategoryName" class="form-control" placeholder="Category name" value=@(Model.Category != null ? Model.Category.Name : "")>
+                </div>
             </div>
-            <div class="col-2">
-                <button type="submit" class="btn btn-danger">Delete category</button>
+            <br />
+            <div class="row">
+                <div class="col-2">
+                    <a href="/category">
+                        <button type="button" class="btn btn-secondary">Cancel</button>
+                    </a>
+                </div>
+                <div class="col-2">
+                    <input type="submit" class="btn btn-primary" value="Update Category">
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 

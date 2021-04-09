@@ -6,6 +6,12 @@
 }
 
 <h1>Categories</h1>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
 <table class="table">
     <thead>
         <tr>
@@ -19,7 +25,12 @@
             <tr>
                 <td>@category.Number</td>
                 <td>@category.Name</td>
-                <td><a href="/category/update?id=@category.Number" class=" text-primary link-primary">Update</a></td>
+                <td><a asp-page="CategoryUpdate" asp-route-id="@category.Number" class=" text-primary link-primary">Update</a></td>
+                <td>
+                    <form method="post">
+                        <input type="submit" asp-page-handler="delete" asp-route-id="@category.Number" class="btn btn-danger" value="Delete">
+                    </form>
+                </td>
             </tr>
         }
     </tbody>

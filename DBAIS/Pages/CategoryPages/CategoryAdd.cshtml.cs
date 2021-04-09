@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using DBAIS.Models;
 using DBAIS.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -11,8 +11,13 @@ namespace DBAIS.Pages
 {
     public class CategoryAddModel : PageModel
     {
+
+        [BindProperty]
+        [Required]
+        [MinLength(3)]
+        public string CategoryName { get; set; }
+
         private readonly CategoryRepository _categoryRepository;
-        public string Message { get; set; } = string.Empty;
 
         public CategoryAddModel(CategoryRepository categoryRepository)
         {
@@ -20,14 +25,19 @@ namespace DBAIS.Pages
         }
         public void OnGet()
         {
-            Message = "Get";
         }
-        public async Task<IActionResult> OnPostAsync([FromForm] string categoryName)
+        public async Task<IActionResult> OnPostAsync()
         {
-            Message = "Post";
-            var newCategory = new Category { Name = categoryName };
-            await _categoryRepository.AddCategory(newCategory);
-            return Redirect("/category");
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            else
+            {
+                var newCategory = new Models.Category { Name = CategoryName };
+                await _categoryRepository.AddCategory(newCategory);
+                return Redirect("/category");
+            }
         }
     }
 }
