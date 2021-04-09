@@ -1,0 +1,26 @@
+﻿@page "/category"
+@model DBAIS.Pages.CategoryPageModel
+
+@{
+    Layout = "_Shared/_CategoriesLayoutPage";
+}
+
+<h1>Categories</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Category number</th>
+            <th scope="col">Category name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>@category.Number</td>
+                <td>@category.Name</td>
+                <td><a href="/category/update?id=@category.Number" class=" text-primary link-primary">Update</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

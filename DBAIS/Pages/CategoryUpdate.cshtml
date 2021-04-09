@@ -13,7 +13,7 @@
             </button>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/">Category</a></li>
+                <li class="breadcrumb-item"><a href="/category">Category</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Update</li>
             </ol>
         </div>
@@ -23,13 +23,13 @@
         <div class="row">
             <div class="col-6">
                 <p class="text-dark fw-bold">
-                    Current category: Vegetables
+                    Current category: @Model._category.Name
                 </p>
             </div>
         </div>
         <div class="row">
             <div class="col-6">
-                <input type="text" class="form-control" placeholder="Category name" aria-label="Last name">
+                <input type="text" class="form-control" placeholder="Category name" value="@Model._category.Name">
             </div>
         </div>
         <br/>
