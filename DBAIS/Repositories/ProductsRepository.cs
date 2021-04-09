@@ -77,5 +77,36 @@ namespace DBAIS.Repositories
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();
         }
+
+        public async Task<List<Product>> GetProducts(string? category, Sort productName)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var sort = productName switch
+            {
+                Sort.Ascending => "order by product_name asc",
+                Sort.Descending => "order by product_name desc",
+                _ => ""
+            };
+            var queryString = category switch
+            {
+                null => "select * from Product " + sort,
+                _ => "select * from Product where category_num = @cat " + sort
+            };
+            
+            await using var query = new NpgsqlCommand(queryString, conn);
+            if (category != null)
+                query.Parameters.Add(new NpgsqlParameter<string>("cat", category));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+            await using var reader = await query.ExecuteReaderAsync();
+            
+            var list = new List<Product>();
+            while (reader.Read())
+            {
+                list.Add(Product.FromSql(reader));
+            }
+            
+            return list;
+        }
     }
 }

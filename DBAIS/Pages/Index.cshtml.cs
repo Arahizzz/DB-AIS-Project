@@ -11,14 +11,14 @@ namespace DBAIS.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly CustomerRepository _customerRepository;
+        private readonly CheckRepository _customerRepository;
 
-        public IndexModel(CustomerRepository customerRepository)
+        public IndexModel(CheckRepository customerRepository)
         {
             _customerRepository = customerRepository;
         }
 
-        public List<PurchaseInfo> Purchases {get; set;}
+        public List<PurchaseInfo> Purchases { get; set; } = null!;
 
         public async Task OnGetAsync()
         {

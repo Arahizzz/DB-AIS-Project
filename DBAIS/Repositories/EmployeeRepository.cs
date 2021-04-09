@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Models.DTOs;
@@ -23,6 +24,7 @@ namespace DBAIS.Repositories
                INNER JOIN store_product sp ON s.UPC = sp.UPC
                INNER JOIN product p ON sp.id_product = p.id_product
                WHERE e.id_employee = @id AND e.role = 'cashier'; ";
+
         private readonly DbOptions _options;
 
         public EmployeeRepository(IOptions<DbOptions> options)
@@ -60,7 +62,7 @@ namespace DBAIS.Repositories
                 string lastCheckNumber = currCheckNumber;
                 while (lastCheckNumber == currCheckNumber)
                 {
-                    products.Add(new()
+                    products.Add(new ()
                     {
                         ProductName = reader.GetString(3),
                         Count = reader.GetInt32(4),
@@ -88,7 +90,7 @@ namespace DBAIS.Repositories
         values (@id, @surname, @name, @patronymic, @role, @salary, @date_of_birth, @date_of_start, @phone_number, @city, @street, @zip)
 "
                 , conn);
-            
+
             command.Parameters.AddRange(new NpgsqlParameter[]
             {
                 new ("id", employee.Id),
@@ -104,12 +106,12 @@ namespace DBAIS.Repositories
                 new ("street", employee.Street),
                 new ("zip", employee.Zip)
             });
-            
+
             await conn.OpenAsync();
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();
         }
-        
+
         public async Task EditEmployee(Employee employee)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
@@ -120,7 +122,7 @@ namespace DBAIS.Repositories
         where id_employee = @id
 "
                 , conn);
-            
+
             command.Parameters.AddRange(new NpgsqlParameter[]
             {
                 new ("id", employee.Id),
@@ -136,13 +138,13 @@ namespace DBAIS.Repositories
                 new ("street", employee.Street),
                 new ("zip", employee.Zip)
             });
-            
+
             await conn.OpenAsync();
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();
         }
-        
-        
+
+
         public async Task DeleteEmployee(string id)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
@@ -154,6 +156,51 @@ namespace DBAIS.Repositories
             await conn.OpenAsync();
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task<List<Employee>> GetCashiers(Sort surname)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"select id_employee, empl_surname, empl_name, empl_patronymic, role, salary, 
+                                date_of_birth, date_of_start, phone_number, city, street, zip_code
+                                from employee";
+            queryString += surname switch
+            {
+                Sort.Ascending => " order by empl_surname asc",
+                Sort.Descending => " order by empl_surname desc",
+                _ => ""
+            };
+            await using var query = new NpgsqlCommand(queryString, conn);
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+            
+            await using var reader = await query.ExecuteReaderAsync();
+            var list = new List<Employee>();
+            while (reader.Read())
+            {
+                list.Add(GetEmployeeFromSql(reader));
+            }
+
+            return list;
+        }
+
+        private static Employee GetEmployeeFromSql(IDataRecord reader)
+        {
+            return new Employee
+            {
+                Id = reader.GetString(0),
+                Surname = reader.GetString(1),
+                Name = reader.GetString(2),
+                Patronymic = reader.GetString(3),
+                Role = reader.GetString(4),
+                Salary = reader.GetDecimal(5),
+                DateOfBirth = reader.GetDateTime(6),
+                DateOfStart = reader.GetDateTime(7),
+                PhoneNumber = reader.GetString(8),
+                City = reader.GetString(9),
+                Street = reader.GetString(10),
+                Zip = reader.GetString(11)
+            };
         }
     }
 }
