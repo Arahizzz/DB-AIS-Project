@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DBAIS.Models
 {
@@ -10,5 +11,6 @@ namespace DBAIS.Models
         public DateTime Date { get; set; }
         public decimal Total { get; set; }
         public decimal Vat { get; set; }
+        public IList<Sale> Sales { get; set; } = ArraySegment<Sale>.Empty;
     }
 }

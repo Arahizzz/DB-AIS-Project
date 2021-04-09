@@ -37,12 +37,42 @@ namespace DBAIS.Repositories
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             await using var command = new NpgsqlCommand(
-                @"insert into Product (category_number, product_name, characteristics)
+                @"insert into product (category_number, product_name, characteristics)
                          values (@category, @name, @characteristics)", conn
                 );
             command.Parameters.Add(new NpgsqlParameter<int>("category", product.CategoryNum));
             command.Parameters.Add(new NpgsqlParameter<string>("name", product.Name));
             command.Parameters.Add(new NpgsqlParameter<string>("characteristics", product.Characteristics));
+            await conn.OpenAsync();
+            await command.PrepareAsync();
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task UpdateProduct(Product product)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var command = new NpgsqlCommand(
+                @"update product
+                         set category_number = @category, product_name = @name, characteristics = @characteristics
+                         where product_id = @id)", conn
+            );
+            command.Parameters.Add(new NpgsqlParameter<int>("id", product.Id));
+            command.Parameters.Add(new NpgsqlParameter<int>("category", product.CategoryNum));
+            command.Parameters.Add(new NpgsqlParameter<string>("name", product.Name));
+            command.Parameters.Add(new NpgsqlParameter<string>("characteristics", product.Characteristics));
+            await conn.OpenAsync();
+            await command.PrepareAsync();
+            await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task DeleteProduct(int id)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var command = new NpgsqlCommand(@"
+        delete from product where category_number = @id
+"
+                , conn);
+            command.Parameters.Add(new NpgsqlParameter<int>("id", id));
             await conn.OpenAsync();
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();

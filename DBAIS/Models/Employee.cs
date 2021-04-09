@@ -9,6 +9,7 @@ namespace DBAIS.Models
         public string Surname { get; set; } = string.Empty;
         public string Patronymic { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+        public decimal Salary { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfStart { get; set; }
         public string PhoneNumber { get; set; } = string.Empty;
