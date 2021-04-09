@@ -13,12 +13,5 @@ namespace DBAIS.Controllers
         {
             _customers = customers;
         }
-
-        [HttpGet("history")]
-        public async Task<IActionResult> GetCustomerPurchaseHistory([FromQuery] string cardNum)
-        {
-            var list = await _customers.GetCustomerChecks(cardNum);
-            return Ok(list);
-        }
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using DBAIS.Models;
+using DBAIS.Models.DTOs;
 using DBAIS.Options;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -24,11 +26,11 @@ namespace DBAIS.Repositories
             await using var checkCommand = new NpgsqlCommand(@"
             insert into ""Check"" (check_number, id_employee, card_number, print_date, sum_total, vat)
             values (@check_num, @id_empl, @card_num, @date, @sum, @vat)
-",conn)
+", conn)
             {
                 Transaction = transaction
             };
-            
+
             checkCommand.Parameters.AddRange(new NpgsqlParameter[]
             {
                 new ("check_num", check.Number),
@@ -51,7 +53,7 @@ namespace DBAIS.Repositories
                 {
                     Transaction = transaction
                 };
-                
+
                 salesCommand.Parameters.AddRange(new NpgsqlParameter[]
                 {
                     new ("upc", sale.Upc),
@@ -66,7 +68,7 @@ namespace DBAIS.Repositories
 
             await transaction.CommitAsync();
         }
-        
+
         public async Task UpdateCheck(Check check)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
@@ -82,7 +84,7 @@ namespace DBAIS.Repositories
             {
                 Transaction = transaction
             };
-            
+
             checkCommand.Parameters.AddRange(new NpgsqlParameter[]
             {
                 new ("check_num", check.Number),
@@ -106,7 +108,7 @@ namespace DBAIS.Repositories
                 {
                     Transaction = transaction
                 };
-                
+
                 salesCommand.Parameters.AddRange(new NpgsqlParameter[]
                 {
                     new ("upc", sale.Upc),
@@ -129,11 +131,149 @@ namespace DBAIS.Repositories
         delete from sale where check_number = @check and upc = @upc
 "
                 , conn);
-            command.Parameters.Add(new NpgsqlParameter<string>("check_number", checkNum));
+            command.Parameters.Add(new NpgsqlParameter<string>("check", checkNum));
             command.Parameters.Add(new NpgsqlParameter<string>("upc", upc));
             await conn.OpenAsync();
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task DeleteCheck(string checkNum)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var command = new NpgsqlCommand(@"
+        delete from ""Check"" where check_number = @check
+"
+                , conn);
+            command.Parameters.Add(new NpgsqlParameter<string>("check", checkNum));
+            await conn.OpenAsync();
+            await command.PrepareAsync();
+            await command.ExecuteNonQueryAsync();
+        }
+        
+        public async Task<List<PurchaseInfo>> GetCustomerChecks(string cardNum)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var query = new NpgsqlCommand(
+                @"SELECT c.check_number,
+                           c.print_date,
+                           c.sum_total,
+                           sp.upc,
+                           p.id_product,
+                           p.product_name,
+                           s.product_number,
+                           s.selling_price
+                    FROM ""Check"" c
+                    inner join sale s on c.check_number = s.check_number
+                    inner join store_product sp on s.upc = sp.upc
+                    inner join product p on sp.id_product = p.id_product
+                    where c.card_number = @cardNum
+                ",
+                conn
+            );
+            query.Parameters.Add(new NpgsqlParameter<string>("cardNum", cardNum));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+
+            var list = new List<PurchaseInfo>();
+            if (!reader.Read())
+                return list;
+
+            while (true)
+            {
+                var products = new List<PurchaseInfo.ProductInfo>();
+                var currId = reader.GetString(0);
+                var info = new PurchaseInfo
+                {
+                    CheckNumber = currId,
+                    PrintDate = reader.GetDateTime(1),
+                    TotalSum = reader.GetDecimal(2)
+                };
+
+                string lastId = currId;
+                while (lastId == currId)
+                {
+                    products.Add(new()
+                    {
+                        Upc = reader.GetString(3),
+                        Id = reader.GetInt32(4),
+                        Name = reader.GetString(5),
+                        Count = reader.GetInt32(6),
+                        Price = reader.GetDecimal(7)
+                    });
+                    if (!reader.Read())
+                    {
+                        info.Products = products;
+                        list.Add(info);
+                        return list;
+                    }
+                    else lastId = reader.GetString(0);
+                }
+
+                info.Products = products;
+                list.Add(info);
+            }
+        }
+
+        public async Task<List<Check>> GetChecks(string? cashier)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"select c.check_number, id_employee, card_number, print_date, sum_total, 
+                                vat, upc, product_number, selling_price 
+                                from ""Check"" c inner join sale s on c.check_number = s.check_number";
+
+            if (cashier != null)
+                queryString += " where c.id_employee = @empl";
+
+            await using var query = new NpgsqlCommand(queryString, conn);
+            if (cashier != null)
+                query.Parameters.Add(new NpgsqlParameter<string>("empl", cashier));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            var list = new List<Check>();
+            if (!reader.Read())
+                return list;
+            
+            while (true)
+            {
+                var products = new List<Sale>();
+                var currId = reader.GetString(0);
+                var info = new Check
+                {
+                    Number = currId,
+                    EmployeeId = reader.GetString(1),
+                    CardNum = reader.GetString(2),
+                    Date = reader.GetDateTime(3),
+                    Total = reader.GetDecimal(4),
+                    Vat = reader.GetDecimal(5)
+                };
+
+                var lastId = currId;
+                while (lastId == currId)
+                {
+                    products.Add(new()
+                    {
+                        Upc = reader.GetString(6),
+                        Check = currId,
+                        Count = reader.GetInt32(7),
+                        Price = reader.GetDecimal(8)
+                    });
+                    if (!reader.Read())
+                    {
+                        info.Sales = products;
+                        list.Add(info);
+                        return list;
+                    }
+                    else lastId = reader.GetString(0);
+                }
+
+                info.Sales = products;
+                list.Add(info);
+            }
         }
     }
 }
