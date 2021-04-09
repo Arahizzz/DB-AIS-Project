@@ -9,6 +9,10 @@ namespace DBAIS.Repositories
 {
     public class ProductsRepository
     {
+        private const string GetProductsJoinCategory = @"
+                select p.id_product, p.product_name, p.characteristics, c.category_number, c.category_name
+                from Product p INNER JOIN Category c ON p.category_number=c.category_number
+            ";
         private readonly DbOptions _options;
 
         public ProductsRepository(IOptions<DbOptions> options)
@@ -19,7 +23,7 @@ namespace DBAIS.Repositories
         public async Task<List<Product>> GetProducts()
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
-            await using var query = new NpgsqlCommand(@"select * from Product", conn);
+            await using var query = new NpgsqlCommand(GetProductsJoinCategory, conn);
             await conn.OpenAsync();
             await query.PrepareAsync();
             await using var reader = await query.ExecuteReaderAsync();
@@ -40,7 +44,7 @@ namespace DBAIS.Repositories
                 @"insert into product (category_number, product_name, characteristics)
                          values (@category, @name, @characteristics)", conn
                 );
-            command.Parameters.Add(new NpgsqlParameter<int>("category", product.CategoryNum));
+            command.Parameters.Add(new NpgsqlParameter<int>("category", product.Category.Number));
             command.Parameters.Add(new NpgsqlParameter<string>("name", product.Name));
             command.Parameters.Add(new NpgsqlParameter<string>("characteristics", product.Characteristics));
             await conn.OpenAsync();
@@ -57,7 +61,7 @@ namespace DBAIS.Repositories
                          where product_id = @id)", conn
             );
             command.Parameters.Add(new NpgsqlParameter<int>("id", product.Id));
-            command.Parameters.Add(new NpgsqlParameter<int>("category", product.CategoryNum));
+            command.Parameters.Add(new NpgsqlParameter<int>("category", product.Category.Number));
             command.Parameters.Add(new NpgsqlParameter<string>("name", product.Name));
             command.Parameters.Add(new NpgsqlParameter<string>("characteristics", product.Characteristics));
             await conn.OpenAsync();
@@ -89,8 +93,8 @@ namespace DBAIS.Repositories
             };
             var queryString = category switch
             {
-                null => "select * from Product " + sort,
-                _ => "select * from Product where category_num = @cat " + sort
+                null => GetProductsJoinCategory + sort,
+                _ => GetProductsJoinCategory + " where category_num = @cat " + sort
             };
             
             await using var query = new NpgsqlCommand(queryString, conn);

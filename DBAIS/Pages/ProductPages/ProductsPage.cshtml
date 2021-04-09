@@ -1,0 +1,40 @@
+﻿@page "/products"
+@model DBAIS.Pages.ProductPages.ProductsPageModel
+@{
+    Layout = "_Shared/_ProductsLayoutPage";
+}
+
+<h1>Products</h1>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Product Id</th>
+            <th scope="col">Category Id</th>
+            <th scope="col">Product name</th>
+            <th scope="col">Characteristics</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Category.Name</td>
+                <td>@product.Name</td>
+                <td>@product.Characteristics</td>
+                <td><a asp-page="CategoryUpdate" asp-route-id="@product.Id" class=" text-primary link-primary">Update</a></td>
+                <td>
+                    <form method="post">
+                        <input type="submit" asp-page-handler="delete" asp-route-id="@product.Id" class="btn btn-danger" value="Delete">
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
