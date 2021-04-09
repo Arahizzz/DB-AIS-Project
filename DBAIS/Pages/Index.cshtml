@@ -2,11 +2,28 @@
 @model DBAIS.Pages.IndexModel
 
 @{
-    Layout = "_Shared/_Layout";
+    Layout = "_Shared/_CategoriesLayoutPage";
 }
 
 <h1>Checks</h1>
-@foreach(var check in Model.Purchases)
-{
-    <p>@check.CheckNumber</p>
-}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Check numbers</th>
+            <th scope="col">Print date</th>
+            <th scope="col">Total sum</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var check in Model.Purchases)
+        {
+        <tr>
+            <td>@check.CheckNumber</td>
+            <td>@check.PrintDate</td>
+            <td>@check.TotalSum₴</td>
+            <td><a href="/category/update" class=" text-primary link-primary">Update</a></td>
+        </tr>
+        }
+    </tbody>
+</table>

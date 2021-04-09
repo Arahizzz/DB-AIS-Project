@@ -51,6 +51,8 @@ namespace DBAIS
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
+
             app.UseEndpoints(endpoints => { 
                 endpoints.MapRazorPages();
                 endpoints.MapControllers(); });
