@@ -3,49 +3,52 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using DBAIS.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DBAIS.Pages.Auth
 {
-    public class SignUpPageModel : PageModel
+    public class EmployerAddModel : PageModel
     {
-        [Required]
+        //
+        [BindProperty]
         [Display(Name = "Id")]
         public string Id { get; set; }
 
-        [Required]
+        [BindProperty]
         [Display(Name = "Surname")]
-        public int Surname { get; set; }
+        public string Surname { get; set; }
 
-        [Required]
+        [BindProperty]
         [Display(Name = "Name")]
-        public int Name { get; set; }
+        public string Name { get; set; }
 
-        [Required]
+        [BindProperty]
         [Display(Name = "Patronym")]
-        public int Patronym { get; set; }
+        public string Patronym { get; set; }
 
-        [Required]
+        [BindProperty]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
 
-        [Required]
+        [BindProperty]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         public string PasswordConfirm { get; set; }
 
-        [Required]
+        [BindProperty]
         [Display(Name = "Role")]
         public string Role { get; set; }
 
-        [Required]
+        [BindProperty]
         [Display(Name = "Salary")]
         public int Salary { get; set; }
 
-        [Required]
+        [BindProperty]
         [Display(Name = "Telephone")]
         public string Telephone { get; set; }
 
@@ -66,10 +69,79 @@ namespace DBAIS.Pages.Auth
 
         [BindProperty]
         public DateTime DateOfStart { get; set; }
+        //
 
-
-        public void OnGet()
+        private readonly UserManager<EmployeeUser> _userManager;
+        private readonly SignInManager<EmployeeUser> _signInManager;
+        public EmployerAddModel(UserManager<EmployeeUser> userManager, SignInManager<EmployeeUser> signInManager)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            var newEmployer = new Models.EmployeeUser
+            {
+                Id = "id100",
+                Surname = "dsf",
+                Patronymic = "sadf",
+                Name = "sadf",
+                PhoneNumber = "2134123",
+                City = "asdf",
+                Street = "asdf",
+                Zip = "asdf",
+                DateOfBirth = DateTime.Now,
+                DateOfStart = DateTime.Now,
+                Role = "cashier",
+                Salary = 1000
+            };
+
+            var result = await _userManager.CreateAsync(newEmployer, Password);
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            else
+            {
+                var newEmployer = new Models.EmployeeUser
+                {
+                    Id = Id,
+                    Surname = Surname,
+                    Patronymic = Patronym,
+                    Name = Name,
+                    PhoneNumber = Telephone,
+                    City = City,
+                    Street = Street,
+                    Zip = ZipCode,
+                    DateOfBirth = DateOfBirth,
+                    DateOfStart = DateOfStart,
+                    Role = Role,
+                    Salary = Salary
+                };
+
+                var result = await _userManager.CreateAsync(newEmployer, Password);
+                if (result.Succeeded)
+                {
+                    // set cookies
+                    //await _signInManager.SignInAsync(user, false);
+                    return Redirect("/");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                }
+
+                return Page();
+            }
         }
     }
 }

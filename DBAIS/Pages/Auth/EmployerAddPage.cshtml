@@ -1,21 +1,31 @@
 ﻿@page "/signup"
-@model DBAIS.Pages.Auth.SignUpPageModel
+@model DBAIS.Pages.Auth.EmployerAddModel
 @{
+    Layout = "_Shared/_MasterLayoutPage";
 }
 
 <h2>Add new employer</h2>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
 <form method="post">
     <div class="form-group">
 
         <div class="row">
             <div class="col-3">
                 <input type="text" asp-for="Surname" class="form-control" placeholder="Surname" />
+                <span asp-validation-for="Surname"></span>
             </div>
             <div class="col-3">
                 <input type="text" asp-for="Name" class="form-control" placeholder="Name" />
+                <span asp-validation-for="Name"></span>
             </div>
             <div class="col-3">
                 <input type="text" asp-for="Patronym" class="form-control" placeholder="Patronym" />
+                <span asp-validation-for="Patronym"></span>
             </div>
         </div>
         <br />
@@ -26,6 +36,14 @@
             <div class="col-3">
                 <input type="text" asp-for="Telephone" class="form-control" placeholder="+ 38 (xxx) xxxxxxx" />
             </div>
+            <div class="col-3">
+                <select type="text" asp-for="Role" class="form-control">
+                    <option value="">No Role</option>
+                    <option value="cashier">Cashier</option>
+                    <option value="manager">Manager</option>
+                </select>
+            </div>
+
         </div>
         <br />
         <div class="row">
@@ -40,9 +58,9 @@
             </div>
         </div>
         <br />
-        <input class="form-control" type="date" asp-for="DateOfBirth">
+        <input class="form-control" type="date" asp-for="DateOfBirth" value="2021-04-10">
         <br />
-        <input class="form-control" type="date" asp-for="DateOfStart">
+        <input class="form-control" type="date" asp-for="DateOfStart" value="2021-04-10">
         <br />
         <div>
             <label asp-for="Password"></label><br />
