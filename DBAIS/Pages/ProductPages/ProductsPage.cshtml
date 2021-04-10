@@ -12,28 +12,30 @@
                 <button type="button" class="btn btn-success">Add +</button>
             </a>
         </div>
-        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fas fa-align-justify"></i>
-        </button>
-        <form method="get">
-            <div class="input-group">
-                <input type="hidden" name="handler" value="ByCategory" />
-                <select class="custom-select" asp-for="SelectedCategory" name="category">
-                    <option value="">All</option>
-                    @foreach (var category in Model.Categories)
-                    {
-                        <option value="@category.Name" selected="@(category.Name.Equals(Model.SelectedCategory))">@category.Name</option>
-                    }
-                </select>
-                <select class="custom-select" asp-for="SelectedCategory" name="sort">
-                    <option value="Ascending" selected="@(Model.SelectedSort == null && Model.SelectedSort == Models.Sort.Ascending)">Asc</option>
-                    <option value="Descending" selected="@(Model.SelectedSort == Models.Sort.Descending)">Desc</option>
-                </select>
-                <div class="input-group-append">
-                    <input class="btn btn-outline-secondary" type="submit" value="Get">
+        <div class="col">
+
+        </div>
+        <div>
+            <form method="get">
+                <div class="input-group">
+                    <input type="hidden" name="handler" value="ByCategory" />
+                    <select class="custom-select" asp-for="SelectedCategory" name="category">
+                        <option value="">All</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Name" selected="@(category.Name.Equals(Model.SelectedCategory))">@category.Name</option>
+                        }
+                    </select>
+                    <select class="custom-select" asp-for="SelectedCategory" name="sort">
+                        <option value="Ascending" selected="@(Model.SelectedSort == null && Model.SelectedSort == Models.Sort.Ascending)">Asc</option>
+                        <option value="Descending" selected="@(Model.SelectedSort == Models.Sort.Descending)">Desc</option>
+                    </select>
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" value="Get">
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </nav>
 
