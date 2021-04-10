@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DBAIS.Models;
@@ -86,7 +87,8 @@ namespace DBAIS.Repositories
 
         public Task<IList<string>> GetRolesAsync(EmployeeUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult<IList<string>>(new[] {user.Role});
+            IList<string> roles = user.Role != "" ? new[] {user.Role} : ArraySegment<string>.Empty;
+            return Task.FromResult<IList<string>>(roles);
         }
 
         public Task<bool> IsInRoleAsync(EmployeeUser user, string roleName, CancellationToken cancellationToken)
