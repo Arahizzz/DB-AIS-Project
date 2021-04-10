@@ -21,5 +21,6 @@ namespace DBAIS.Models
     public class EmployeeUser : Employee
     {
         public string Password { get; set; } = null!;
+        public string UserName { get => PhoneNumber; set => PhoneNumber = value; }
     }
 }

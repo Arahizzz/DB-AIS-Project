@@ -50,6 +50,13 @@ INSERT INTO public.customer_card (card_number, cust_surname, cust_name, cust_pat
                                   zip_code, percent)
 VALUES ('3836104182447', 'Lutsenko', 'Kateryna', 'Mykhayilivna', '+380345779809', 'Lviv', 'Svobody', '02456', 3);
 
+INSERT INTO role (role_name)
+values ('');
+INSERT INTO role (role_name)
+values ('manager');
+INSERT INTO role (role_name)
+values ('cashier');
+
 -- Employee
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code)
 VALUES ('id1', 'Davydova', 'Olena', 'Vasylivna', 'cashier', 1500, '1974-05-22', '2006-04-30', '0688856321', 'Kyiv', 'Street1', 1001);
