@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DBAIS.Models;
@@ -6,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DBAIS.Repositories
 {
-    public class EmployeeUserStore : IUserRoleStore<EmployeeUser>
+    public class EmployeeUserStore : IUserRoleStore<EmployeeUser>, IUserPasswordStore<EmployeeUser>
     {
         private readonly EmployeeUserRepository _repository;
 
@@ -86,7 +87,8 @@ namespace DBAIS.Repositories
 
         public Task<IList<string>> GetRolesAsync(EmployeeUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult<IList<string>>(new[] {user.Role});
+            IList<string> roles = user.Role != "" ? new[] {user.Role} : ArraySegment<string>.Empty;
+            return Task.FromResult<IList<string>>(roles);
         }
 
         public Task<bool> IsInRoleAsync(EmployeeUser user, string roleName, CancellationToken cancellationToken)
@@ -97,6 +99,22 @@ namespace DBAIS.Repositories
         public async Task<IList<EmployeeUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
             return await _repository.GetEmployeeUsersByRole(roleName);
+        }
+
+        public Task SetPasswordHashAsync(EmployeeUser user, string passwordHash, CancellationToken cancellationToken)
+        {
+            user.Password = passwordHash;
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetPasswordHashAsync(EmployeeUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Password);
+        }
+
+        public Task<bool> HasPasswordAsync(EmployeeUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(!string.IsNullOrEmpty(user.Password));
         }
     }
 }
