@@ -4,66 +4,58 @@
     Layout = "_Shared/_MasterLayoutPage";
 }
 <div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <button type="button" id="sidebarCollapse" class="btn btn-info">
-                <i class="fas fa-align-left"></i>
-                <span>Toggle Sidebar</span>
-            </button>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item"><a href="/products">Products</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Update</li>
-            </ol>
-        </div>
-    </nav>
+    <!-- Toggle menu -->
+    @{
+        Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+        {
+                    {"/", "Home"},
+                    {"/products", "Products"},
+                    {"/products/add", "Update"},
+                };
+
+    }
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
     <!-- Content -->
     <div>
-        @if (Model.Product != null && Model.Product.Name != "")
-        {
-            <div class="row">
-                <div class="col-6">
-                    <p class="text-dark fw-bold">
-                        Current product: @Model.Product.Name
-                    </p>
-                </div>
-            </div>
+        @{ 
+            var header = "Current product: " + (Model.Product != null ? Model.Product.Name : "");
         }
+        <partial name="_EditPageHeader" model="@header" />
         @if (ModelState.ErrorCount > 0)
         {
             <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
                 <div class="validation" asp-validation-summary="All"></div>
             </div>
         }
-    <form method="post">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-4">
-                    <input type="text" asp-for="ProductName" class="form-control" placeholder="Product name" value=@(Model.Product != null ? Model.Product.Name : "")>
+        <form method="post">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-4">
+                        <input type="text" asp-for="ProductName" class="form-control" placeholder="Product name" value=@(Model.Product != null ? Model.Product.Name : "")>
+                    </div>
+                    <div class="col-2">
+                        <select class="custom-select" asp-for="ProductCategoryId" asp-items="Model.CategoryOptions"></select>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <select class="custom-select" asp-for="ProductCategoryId" asp-items="Model.CategoryOptions"></select>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <label for="characteristicsTextArea">Characteristics</label>
+                        <textarea asp-for="ProductCharacteristics" class="form-control" id="characteristicsTextArea" rows="3"></textarea>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/products">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-primary" value="Update Product">
+                    </div>
                 </div>
             </div>
-            <br />
-            <div class="row">
-                <div class="col-6">
-                    <label for="characteristicsTextArea">Characteristics</label>
-                    <textarea asp-for="ProductCharacteristics" class="form-control" id="characteristicsTextArea" rows="3"></textarea>
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col-2">
-                    <a href="/products">
-                        <button type="button" class="btn btn-secondary">Cancel</button>
-                    </a>
-                </div>
-                <div class="col-2">
-                    <input type="submit" class="btn btn-primary" value="Update Product">
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
     </div>
 </div>
