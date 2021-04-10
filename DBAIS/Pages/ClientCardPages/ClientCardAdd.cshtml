@@ -1,0 +1,85 @@
+﻿@page "/customers/add"
+@model DBAIS.Pages.ClientCardPages.ClientCardAddModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+<div>
+    <!-- Toggle menu -->
+    @{
+        Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/customers", "Customers"},
+                    {"/customers/add", "Add"},
+                };
+
+    }
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+    <!-- Content -->
+    <div>
+        @{
+            var header = "Create new Customer Card";
+        }
+        <partial name="_EditPageHeader" model="@header" />
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
+            </div>
+        }
+        <form method="post">
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-3">
+                        <input type="text" asp-for="Surname" class="form-control" placeholder="Surname"/>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Name"/>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="Patronym" class="form-control" placeholder="Patronym"/>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <input type="text" asp-for="CardNumber" class="form-control" placeholder="xxxxxxxxxxxxx"/>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="Telephone" class="form-control" placeholder="+ 38 (xxx) xxxxxxx"/>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <input type="text" asp-for="City" class="form-control" placeholder="City"/>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="Street" class="form-control" placeholder="Street"/>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="ZipCode" class="form-control" placeholder="ZipCode"/>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-4">
+                        <input type="number" asp-for="Percent" min="1" value="1" max="100" class="form-control"/>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/customers">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-success" value="Create Customer Card">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
