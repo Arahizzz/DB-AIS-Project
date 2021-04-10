@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Options;
+using DBAIS.Repositories.Utils;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -115,11 +116,12 @@ namespace DBAIS.Repositories
                 Name = reader.GetString(2),
                 Patronymic = reader.GetString(3),
                 Phone = reader.GetString(4),
-                City = reader.GetString(5),
-                Street = reader.GetString(6),
-                Zip = reader.GetString(7),
+                City = NullSafeGetter.GetValueOrDefault<string>(reader,5),
+                Street = NullSafeGetter.GetValueOrDefault<string>(reader, 6),
+                Zip = NullSafeGetter.GetValueOrDefault<string>(reader, 7),
                 Percent = reader.GetInt32(8)
             };
         }
+
     }
 }

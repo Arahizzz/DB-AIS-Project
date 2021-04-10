@@ -22,8 +22,7 @@ namespace DBAIS.Pages.ClientCardPages
 
         public async Task OnGetAsync()
         {
-            Customers = new List<Card>();
-            Customers.Add(new Card{ Number = "12345", Surname = "S", Name = "N", Patronymic = "P", Phone = "+380", City = "Kyiv", Percent = 5});
+            Customers = await _customerRepository.GetCards(null);
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)

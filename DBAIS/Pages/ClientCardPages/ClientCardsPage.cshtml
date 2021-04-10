@@ -32,7 +32,8 @@
             <th scope="col">Name</th>
             <th scope="col">Patronym</th>
             <th scope="col">Telephone</th>
-            <th scope="col">Address</th>
+            <th scope="col">City</th>
+            <th scope="col">Street</th>
             <th scope="col">%</th>
         </tr>
     </thead>
@@ -45,7 +46,23 @@
             <td>@customer.Name</td>
             <td>@customer.Patronymic</td>
             <td>@customer.Phone</td>
-            <td>@customer.City</td>
+            @if (@customer.City != null)
+            {
+                <td>@customer.City</td>
+            }
+            else
+            {
+                <td>-</td>
+            }
+            @if (@customer.Street != null)
+            {
+                <td>@customer.Street</td>
+            }
+            else
+            {
+                <td>-</td>
+            }
+
             <td>@customer.Percent</td>
             <td><a asp-page="CustomerUpdate" asp-route-id="@customer.Number" class=" text-primary link-primary">Update</a></td>
             <td>
