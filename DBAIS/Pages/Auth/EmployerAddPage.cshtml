@@ -4,6 +4,17 @@
     Layout = "_Shared/_MasterLayoutPage";
 }
 
+<!-- Toggle menu -->
+@{
+    Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/signup", "SignUp"}
+                };
+
+}
+<partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+
 <h2>Add new employer</h2>
 @if (ModelState.ErrorCount > 0)
 {
@@ -17,24 +28,26 @@
         <div class="row">
             <div class="col-3">
                 <input type="text" asp-for="Surname" class="form-control" placeholder="Surname" />
-                <span asp-validation-for="Surname"></span>
+                <span asp-validation-for="Surname" class="text-danger"></span>
             </div>
             <div class="col-3">
                 <input type="text" asp-for="Name" class="form-control" placeholder="Name" />
-                <span asp-validation-for="Name"></span>
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="col-3">
                 <input type="text" asp-for="Patronym" class="form-control" placeholder="Patronym" />
-                <span asp-validation-for="Patronym"></span>
+                <span asp-validation-for="Patronym" class="text-danger"></span>
             </div>
         </div>
         <br />
         <div class="row">
             <div class="col-3">
                 <input type="text" asp-for="Id" class="form-control" placeholder="Employer Id" />
+                <span asp-validation-for="Id" class="text-danger"></span>
             </div>
             <div class="col-3">
                 <input type="text" asp-for="Telephone" class="form-control" placeholder="+ 38 (xxx) xxxxxxx" />
+                <span asp-validation-for="Telephone" class="text-danger"></span>
             </div>
             <div class="col-3">
                 <select type="text" asp-for="Role" class="form-control">
@@ -42,6 +55,7 @@
                     <option value="cashier">Cashier</option>
                     <option value="manager">Manager</option>
                 </select>
+                <span asp-validation-for="Role" class="text-danger"></span>
             </div>
 
         </div>
@@ -49,28 +63,44 @@
         <div class="row">
             <div class="col-3">
                 <input type="text" asp-for="City" class="form-control" placeholder="City" />
+                <span asp-validation-for="City" class="text-danger"></span>
             </div>
             <div class="col-3">
                 <input type="text" asp-for="Street" class="form-control" placeholder="Street" />
+                <span asp-validation-for="Street" class="text-danger"></span>
             </div>
             <div class="col-3">
                 <input type="text" asp-for="ZipCode" class="form-control" placeholder="ZipCode" />
+                <span asp-validation-for="ZipCode" class="text-danger"></span>
             </div>
         </div>
         <br />
-        <input class="form-control" type="date" asp-for="DateOfBirth" value="2021-04-10">
-        <br />
-        <input class="form-control" type="date" asp-for="DateOfStart" value="2021-04-10">
-        <br />
-        <div>
-            <label asp-for="Password"></label><br />
-            <input asp-for="Password" />
-            <span asp-validation-for="Password"></span>
+        <div class="row">
+            <div class="col-3">
+                <input class="form-control" type="date" asp-for="DateOfBirth" value="2021-04-10">
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            <div class="col-3">
+                <input class="form-control" type="date" asp-for="DateOfStart" value="2021-04-10">
+                <span asp-validation-for="DateOfStart" class="text-danger"></span>
+            </div>
         </div>
-        <div>
-            <label asp-for="PasswordConfirm"></label><br />
-            <input asp-for="PasswordConfirm" />
-            <span asp-validation-for="PasswordConfirm"></span>
+        <br />
+        <div class="row">
+            <div class="col-3">
+                <div>
+                    <label asp-for="Password"></label><br />
+                    <input class="form-control" asp-for="Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-3">
+                <div>
+                    <label asp-for="PasswordConfirm"></label><br />
+                    <input class="form-control" asp-for="PasswordConfirm" />
+                    <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                </div>
+            </div>
         </div>
         <br />
         <div class="row">

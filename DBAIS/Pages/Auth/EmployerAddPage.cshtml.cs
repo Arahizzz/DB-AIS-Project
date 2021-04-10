@@ -81,7 +81,7 @@ namespace DBAIS.Pages.Auth
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var newEmployer = new Models.EmployeeUser
+            /*var newEmployer = new Models.EmployeeUser
             {
                 Id = "id100",
                 Surname = "Test",
@@ -97,7 +97,7 @@ namespace DBAIS.Pages.Auth
                 Salary = 1000
             };
 
-            var result = await _userManager.CreateAsync(newEmployer, "password");
+            var result = await _userManager.CreateAsync(newEmployer, "password");*/
             return Page();
         }
 
