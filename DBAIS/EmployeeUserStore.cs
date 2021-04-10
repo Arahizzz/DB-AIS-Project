@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DBAIS.Repositories
 {
-    public class EmployeeUserStore : IUserRoleStore<EmployeeUser>
+    public class EmployeeUserStore : IUserRoleStore<EmployeeUser>, IUserPasswordStore<EmployeeUser>
     {
         private readonly EmployeeUserRepository _repository;
 
@@ -99,6 +99,22 @@ namespace DBAIS.Repositories
         public async Task<IList<EmployeeUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
             return await _repository.GetEmployeeUsersByRole(roleName);
+        }
+
+        public Task SetPasswordHashAsync(EmployeeUser user, string passwordHash, CancellationToken cancellationToken)
+        {
+            user.Password = passwordHash;
+            return Task.CompletedTask;
+        }
+
+        public Task<string> GetPasswordHashAsync(EmployeeUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Password);
+        }
+
+        public Task<bool> HasPasswordAsync(EmployeeUser user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(!string.IsNullOrEmpty(user.Password));
         }
     }
 }
