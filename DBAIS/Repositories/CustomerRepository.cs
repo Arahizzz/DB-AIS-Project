@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using DBAIS.Models;
-using DBAIS.Models.DTOs;
 using DBAIS.Options;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -74,13 +74,52 @@ namespace DBAIS.Repositories
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             await using var command = new NpgsqlCommand(@"
-        delete from category where category_number = @num
+        delete from customer_card where card_number = @num
 "
                 , conn);
             command.Parameters.Add(new NpgsqlParameter<string>("num", number));
             await conn.OpenAsync();
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();
+        }
+
+        public async Task<List<Card>> GetCards(int? percent)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"select card_number, cust_surname, cust_name, cust_patronymic, phone_number, 
+                                city, street, zip_code, percent from customer_card";
+            if (percent != null)
+                queryString += " where percent = @percent";
+            await using var query = new NpgsqlCommand(queryString, conn);
+            if (percent != null)
+                query.Parameters.Add(new NpgsqlParameter<int>("percent", percent.Value));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            var list = new List<Card>();
+            while (reader.Read())
+            {
+                list.Add(GetCardFromSql(reader));
+            }
+            
+            return list;
+        }
+
+        private static Card GetCardFromSql(IDataRecord reader)
+        {
+            return new Card
+            {
+                Number = reader.GetString(0),
+                Surname = reader.GetString(1),
+                Name = reader.GetString(2),
+                Patronymic = reader.GetString(3),
+                Phone = reader.GetString(4),
+                City = reader.GetString(5),
+                Street = reader.GetString(6),
+                Zip = reader.GetString(7),
+                Percent = reader.GetInt32(8)
+            };
         }
     }
 }
