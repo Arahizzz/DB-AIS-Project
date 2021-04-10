@@ -28,7 +28,8 @@ CREATE TABLE Employee
     phone_number    varchar(13)    not null,
     city            varchar(50)    not null,
     street          varchar(50)    not null,
-    zip_code        varchar(9)     not null
+    zip_code        varchar(9)     not null,
+    password        varchar(100)   not null
 );
 
 CREATE TABLE Customer_Card

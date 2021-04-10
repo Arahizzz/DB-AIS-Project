@@ -17,4 +17,9 @@ namespace DBAIS.Models
         public string Street { get; set; } = string.Empty;
         public string Zip { get; set; } = string.Empty;
     }
+
+    public class EmployeeUser : Employee
+    {
+        public string Password { get; set; } = null!;
+    }
 }
