@@ -7,7 +7,7 @@ namespace DBAIS
         public TKey Id { get; set; }
 
         public EntityNotFoundException(TKey id) 
-            : base($"Could not find entity {nameof(TEntity)} with id {id}")
+            : base($"Could not find entity {typeof(TEntity).Name} by key {id}")
         {
             Id = id;
         }

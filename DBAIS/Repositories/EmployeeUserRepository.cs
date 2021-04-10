@@ -17,7 +17,7 @@ namespace DBAIS.Repositories
             _options = options.Value;
         }
 
-        public async Task<EmployeeUser> GetEmployeeUserById(string id)
+        public async Task<EmployeeUser?> GetEmployeeUserById(string id)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             var queryString = @"select id_employee, password, empl_surname, empl_name, empl_patronymic, role, salary, 
@@ -31,12 +31,12 @@ namespace DBAIS.Repositories
 
             await using var reader = await query.ExecuteReaderAsync();
             if (!reader.Read())
-                throw new EntityNotFoundException<EmployeeUser, string>(id);
+                return null;
 
             return GetEmployeeUserFromSql(reader);
         }
 
-        public async Task<EmployeeUser> GetEmployeeUserByPhone(string phone)
+        public async Task<EmployeeUser?> GetEmployeeUserByPhone(string phone)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             var queryString = @"select id_employee, password, empl_surname, empl_name, empl_patronymic, role, salary, 
@@ -50,7 +50,7 @@ namespace DBAIS.Repositories
 
             await using var reader = await query.ExecuteReaderAsync();
             if (!reader.Read())
-                throw new EntityNotFoundException<EmployeeUser, string>(phone);
+                return null;
 
             return GetEmployeeUserFromSql(reader);
         }
