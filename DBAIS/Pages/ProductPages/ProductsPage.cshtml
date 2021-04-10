@@ -65,7 +65,7 @@
                 <td>@product.Category.Name</td>
                 <td>@product.Name</td>
                 <td>@product.Characteristics</td>
-                <td><a asp-page="CategoryUpdate" asp-route-id="@product.Id" class=" text-primary link-primary">Update</a></td>
+                <td><a asp-page="ProductUpdate" asp-route-id="@product.Id" class=" text-primary link-primary">Update</a></td>
                 <td>
                     <form method="post">
                         <input type="submit" asp-page-handler="delete" asp-route-id="@product.Id" class="btn btn-danger" value="Delete">

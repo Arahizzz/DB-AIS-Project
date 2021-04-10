@@ -41,17 +41,18 @@ namespace DBAIS.Pages.ProductPages
             Products = await _productRepository.GetProducts(category, sort.GetValueOrDefault(Sort.Ascending));
             Categories = await _categoryRepository.GetCategoriesAlphabetical();
         }
-        public async Task<IActionResult> OnPostDeleteAsync()
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            /*try
+            try
             {
-                await _categoryRepository.DeleteCategory(id);
+                await _productRepository.DeleteProduct(id);
             }
             catch (Exception e)
             {
-                ModelState.AddModelError("", "You can`t delete this category");
+                ModelState.AddModelError("", "You can`t delete this product");
             }
-            Categories = await _categoryRepository.GetCategoriesAlphabetical();*/
+            Products = await _productRepository.GetProducts();
+            Categories = await _categoryRepository.GetCategoriesAlphabetical();
             return Page();
         }
     }

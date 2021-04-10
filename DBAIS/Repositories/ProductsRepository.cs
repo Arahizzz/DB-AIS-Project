@@ -58,7 +58,7 @@ namespace DBAIS.Repositories
             await using var command = new NpgsqlCommand(
                 @"update product
                          set category_number = @category, product_name = @name, characteristics = @characteristics
-                         where product_id = @id)", conn
+                         where id_product = @id", conn
             );
             command.Parameters.Add(new NpgsqlParameter<int>("id", product.Id));
             command.Parameters.Add(new NpgsqlParameter<int>("category", product.Category.Number));
