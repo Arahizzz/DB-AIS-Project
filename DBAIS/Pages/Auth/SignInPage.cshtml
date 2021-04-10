@@ -1,0 +1,54 @@
+﻿@page "/signin"
+@model DBAIS.Pages.Auth.SignInPageModel
+
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<!-- Toggle menu -->
+@{
+    Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/signin", "SignIn"}
+                };
+
+}
+<partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+
+<h2>Sign In</h2>
+<form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+    @if (ModelState.ErrorCount > 0)
+    {
+        <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+            <div class="validation" asp-validation-summary="All"></div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-3">
+            <label asp-for="Telephone"></label><br />
+            <input asp-for="Telephone" class="form-control" />
+            <span asp-validation-for="Telephone" class="text-danger"></span>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-3">
+            <label asp-for="Password"></label><br />
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-1">
+            <div>
+                <label asp-for="RememberMe"></label><br />
+                <input asp-for="RememberMe" />
+            </div>
+        </div>
+    </div>
+    <div>
+        <input type="submit" value="Enter"/>
+    </div>
+</form>

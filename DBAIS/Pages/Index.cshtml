@@ -11,16 +11,27 @@
         <div class="col">
 
         </div>
-        <div class="col-1">
-            <a href="/signin">
-                <button type="button" class="btn btn-primary">Sign In</button>
-            </a>
-        </div>
-        <div class="col-1">
-            <a href="/signup">
-                <button type="button" class="btn btn-primary">Sign Up</button>
-            </a>
-        </div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <p>@User.Identity.Name</p>
+            <p>@User.Identity.AuthenticationType</p>
+            <form method="post" asp-controller="SignInPage" asp-action="Logout">
+                <input type="submit" value="Sign Out" />
+            </form>
+        }
+        else
+        {
+            <div class="col-1">
+                <a href="/signin">
+                    <button type="button" class="btn btn-primary">Sign In</button>
+                </a>
+            </div>
+            <div class="col-1">
+                <a href="/signup">
+                    <button type="button" class="btn btn-primary">Sign Up</button>
+                </a>
+            </div>
+        }
     </div>
 </nav>
 
