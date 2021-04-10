@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DBAIS.Models;
 using DBAIS.Options;
 using DBAIS.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -30,6 +31,7 @@ namespace DBAIS
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<DbOptions>(Configuration.GetSection("Postgres"));
+            services.AddSingleton<EmployeeUserRepository>();
             services.AddSingleton<ProductsRepository>();
             services.AddSingleton<CustomerRepository>();
             services.AddSingleton<EmployeeRepository>();
@@ -37,6 +39,10 @@ namespace DBAIS
             services.AddSingleton<CustomerRepository>();
             services.AddSingleton<StoreProductRepository>();
             services.AddSingleton<CategoryRepository>();
+
+            services.AddIdentity<EmployeeUser, string>()
+                .AddUserStore<EmployeeUserStore>()
+                .AddRoleStore<EmployeeUserStore>();
 
             services.AddControllers();
             services.AddRazorPages();
@@ -62,6 +68,7 @@ namespace DBAIS
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseStaticFiles();

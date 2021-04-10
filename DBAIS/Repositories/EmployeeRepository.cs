@@ -82,36 +82,6 @@ namespace DBAIS.Repositories
             }
         }
 
-        public async Task AddEmployee(Employee employee)
-        {
-            await using var conn = new NpgsqlConnection(_options.ConnectionString);
-            await using var command = new NpgsqlCommand(@"
-        insert into employee (id_employee, empl_surname, empl_name, empl_patronymic, role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)
-        values (@id, @surname, @name, @patronymic, @role, @salary, @date_of_birth, @date_of_start, @phone_number, @city, @street, @zip)
-"
-                , conn);
-
-            command.Parameters.AddRange(new NpgsqlParameter[]
-            {
-                new ("id", employee.Id),
-                new ("surname", employee.Surname),
-                new ("name", employee.Name),
-                new ("patronymic", employee.Patronymic),
-                new ("role", employee.Role),
-                new ("salary", employee.Salary),
-                new ("date_of_birth", employee.DateOfBirth),
-                new ("date_of_start", employee.DateOfStart),
-                new ("phone_number", employee.PhoneNumber),
-                new ("city", employee.City),
-                new ("street", employee.Street),
-                new ("zip", employee.Zip)
-            });
-
-            await conn.OpenAsync();
-            await command.PrepareAsync();
-            await command.ExecuteNonQueryAsync();
-        }
-
         public async Task EditEmployee(Employee employee)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
@@ -144,20 +114,6 @@ namespace DBAIS.Repositories
             await command.ExecuteNonQueryAsync();
         }
 
-
-        public async Task DeleteEmployee(string id)
-        {
-            await using var conn = new NpgsqlConnection(_options.ConnectionString);
-            await using var command = new NpgsqlCommand(@"
-        delete from employee where id_employee = @id
-"
-                , conn);
-            command.Parameters.Add(new NpgsqlParameter<string>("id", id));
-            await conn.OpenAsync();
-            await command.PrepareAsync();
-            await command.ExecuteNonQueryAsync();
-        }
-
         public async Task<List<Employee>> GetCashiers(Sort surname)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
@@ -183,6 +139,27 @@ namespace DBAIS.Repositories
 
             return list;
         }
+        
+        public async Task<Employee> GetEmployeeById(string id)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"select id_employee, empl_surname, empl_name, empl_patronymic, role, salary, 
+                                date_of_birth, date_of_start, phone_number, city, street, zip_code
+                                from employee
+                                where id_employee = @id";
+            await using var query = new NpgsqlCommand(queryString, conn);
+            query.Parameters.Add(new NpgsqlParameter<string>("id",id));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+            
+            await using var reader = await query.ExecuteReaderAsync();
+            if (!reader.Read())
+                throw new EntityNotFoundException<Employee, string>(id);
+
+            return GetEmployeeFromSql(reader);
+        }
+        
+        
 
         private static Employee GetEmployeeFromSql(IDataRecord reader)
         {
@@ -202,5 +179,7 @@ namespace DBAIS.Repositories
                 Zip = reader.GetString(11)
             };
         }
+        
+       
     }
 }
