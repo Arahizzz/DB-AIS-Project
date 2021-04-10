@@ -1,0 +1,69 @@
+﻿@page "/signup"
+@model DBAIS.Pages.Auth.SignUpPageModel
+@{
+}
+
+<h2>Add new employer</h2>
+<form method="post">
+    <div class="form-group">
+
+        <div class="row">
+            <div class="col-3">
+                <input type="text" asp-for="Surname" class="form-control" placeholder="Surname" />
+            </div>
+            <div class="col-3">
+                <input type="text" asp-for="Name" class="form-control" placeholder="Name" />
+            </div>
+            <div class="col-3">
+                <input type="text" asp-for="Patronym" class="form-control" placeholder="Patronym" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-3">
+                <input type="text" asp-for="Id" class="form-control" placeholder="Employer Id" />
+            </div>
+            <div class="col-3">
+                <input type="text" asp-for="Telephone" class="form-control" placeholder="+ 38 (xxx) xxxxxxx" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-3">
+                <input type="text" asp-for="City" class="form-control" placeholder="City" />
+            </div>
+            <div class="col-3">
+                <input type="text" asp-for="Street" class="form-control" placeholder="Street" />
+            </div>
+            <div class="col-3">
+                <input type="text" asp-for="ZipCode" class="form-control" placeholder="ZipCode" />
+            </div>
+        </div>
+        <br />
+        <input class="form-control" type="date" asp-for="DateOfBirth">
+        <br />
+        <input class="form-control" type="date" asp-for="DateOfStart">
+        <br />
+        <div>
+            <label asp-for="Password"></label><br />
+            <input asp-for="Password" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div>
+            <label asp-for="PasswordConfirm"></label><br />
+            <input asp-for="PasswordConfirm" />
+            <span asp-validation-for="PasswordConfirm"></span>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-2">
+                <a href="/">
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                </a>
+            </div>
+            <div class="col-2">
+                <input type="submit" class="btn btn-success" value="Create Employer">
+            </div>
+        </div>
+    </div>
+</form>
