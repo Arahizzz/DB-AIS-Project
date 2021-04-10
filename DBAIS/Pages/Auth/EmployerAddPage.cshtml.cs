@@ -84,20 +84,20 @@ namespace DBAIS.Pages.Auth
             var newEmployer = new Models.EmployeeUser
             {
                 Id = "id100",
-                Surname = "dsf",
-                Patronymic = "sadf",
-                Name = "sadf",
+                Surname = "Test",
+                Patronymic = "Test",
+                Name = "Test",
                 PhoneNumber = "2134123",
-                City = "asdf",
-                Street = "asdf",
-                Zip = "asdf",
+                City = "Test",
+                Street = "Test",
+                Zip = "Test",
                 DateOfBirth = DateTime.Now,
                 DateOfStart = DateTime.Now,
                 Role = "cashier",
                 Salary = 1000
             };
 
-            var result = await _userManager.CreateAsync(newEmployer, Password);
+            var result = await _userManager.CreateAsync(newEmployer, "password");
             return Page();
         }
 
