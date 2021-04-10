@@ -1,29 +1,27 @@
 ﻿@page
 @model DBAIS.Pages.IndexModel
-
 @{
-    Layout = "_Shared/_CategoriesLayoutPage";
+    ViewBag.Title = "Home";
+    Layout = "_Shared/_MasterLayoutPage";
 }
 
-<h1>Checks</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Check numbers</th>
-            <th scope="col">Print date</th>
-            <th scope="col">Total sum</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var check in Model.Purchases)
-        {
-        <tr>
-            <td>@check.CheckNumber</td>
-            <td>@check.PrintDate</td>
-            <td>@check.TotalSum₴</td>
-            <td><a href="/category/update" class=" text-primary link-primary">Update</a></td>
-        </tr>
-        }
-    </tbody>
-</table>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+        <div class="col">
+
+        </div>
+        <div class="col-1">
+            <a href="/signin">
+                <button type="button" class="btn btn-primary">Sign In</button>
+            </a>
+        </div>
+        <div class="col-1">
+            <a href="/signup">
+                <button type="button" class="btn btn-primary">Sign Up</button>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<h1>ZLAGODA supermarket main page</h1>

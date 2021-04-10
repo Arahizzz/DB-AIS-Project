@@ -31,38 +31,28 @@
             </div>
 
             <ul class="list-unstyled components">
-                <p>Storage</p>
-                <li class="active">
-                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-fw fa-home"></i>Home</a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
-                        <li>
-                            <a href="#home"><i class="fa fa-fw fa-home"></i> Home</a>
-                        </li>
-                        <li>
-                            <a href="#home"><i class="fa fa-fw fa-home"></i> Home</a>
-                        </li>
-                        <li>
-                            <a href="#home"><i class="fa fa-fw fa-home"></i> Home</a>
-                        </li>
-                    </ul>
+                <p>Supermarket</p>
+                <li class="@(ViewBag.Title == "Home" ? "active" : "")">
+                    <a href="/"><i class="fa fa-fw fa-home"></i> Home</a>
                 </li>
-                <li>
+                <li class="@(ViewBag.Title == "Products" ? "active" : "")">
                     <a href="/products"><i class="fa fa-shopping-basket" aria-hidden="true"></i> Products</a>
                 </li>
-                <li>
-                    <a href="/category"><i class="fa fa-tags"></i> Categories</a>
+                <li class="@(ViewBag.Title == "Category" ? "active" : "")">
+                    <a href="/category"><i class="fa fa-tags"></i> Category</a>
                 </li>
-                <li>
-                    <a href="/storage"><i class="fa fa-truck" aria-hidden="true"></i> Storage</a>
+                <li class="@(ViewBag.Title == "Storage" ? "active" : "")">
+                    <a href="#storage"><i class="fa fa-truck" aria-hidden="true"></i> Storage</a>
                 </li>
-                <li>
-                    <a href="#"><i class="fa fa-fw fa-users"></i> Stuff</a>
+                <li class="@(ViewBag.Title == "Users" ? "active" : "")">
+                    <a href="#users"><i class="fa fa-fw fa-users"></i> Stuff</a>
                 </li>
-                <li>
+                <li class="@(ViewBag.Title == "Customers" ? "active" : "")">
                     <a href="/customers"><i class="fa fa-credit-card" aria-hidden="true"></i> Client cards</a>
                 </li>
                 <li>
-                    <a href="#contact"><i class="fa fa-align-justify"></i> Other</a></li>
+                    <a href="#contact"><i class="fa fa-align-justify"></i> Other</a>
+                </li>
                 <li>
                     <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
