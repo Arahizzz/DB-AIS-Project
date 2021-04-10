@@ -94,7 +94,7 @@ namespace DBAIS.Repositories
             var queryString = category switch
             {
                 null => GetProductsJoinCategory + sort,
-                _ => GetProductsJoinCategory + " where category_num = @cat " + sort
+                _ => GetProductsJoinCategory + " where c.category_name = @cat " + sort
             };
             
             await using var query = new NpgsqlCommand(queryString, conn);

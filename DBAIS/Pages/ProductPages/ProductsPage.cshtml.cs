@@ -11,20 +11,36 @@ namespace DBAIS.Pages.ProductPages
 {
     public class ProductsPageModel : PageModel
     {
+        private readonly CategoryRepository _categoryRepository;
         private readonly ProductsRepository _productRepository;
 
-        public ProductsPageModel(ProductsRepository productRepository)
+        [BindProperty]
+        public string SelectedCategory { get; set; } = String.Empty;
+        [BindProperty]
+        public Sort? SelectedSort { get; set; }
+
+        public ProductsPageModel(ProductsRepository productRepository, CategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public List<Product> Products { get; set; }
+        public List<Models.Category> Categories { get; set; }
 
         public async Task OnGetAsync()
         {
             Products = await _productRepository.GetProducts();
+            Categories = await _categoryRepository.GetCategoriesAlphabetical();
         }
 
+        public async Task OnGetByCategory([FromQuery] string? category, [FromQuery] Sort? sort)
+        {
+            SelectedCategory = category;
+            SelectedSort = sort;
+            Products = await _productRepository.GetProducts(category, sort.GetValueOrDefault(Sort.Ascending));
+            Categories = await _categoryRepository.GetCategoriesAlphabetical();
+        }
         public async Task<IActionResult> OnPostDeleteAsync()
         {
             /*try
