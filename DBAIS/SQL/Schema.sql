@@ -15,13 +15,18 @@ CREATE TABLE Product
         on delete no action
 );
 
-CREATE TABLE Employee
+CREATE TABLE Role
+(
+    role_name varchar(25) primary key 
+);
+
+CREATE TABLE "Employee"
 (
     id_employee     varchar(10) primary key,
     empl_surname    varchar(50)    not null,
     empl_name       varchar(50)    not null,
     empl_patronymic varchar(50)    not null,
-    role            varchar(10)    not null,
+    role            varchar(10)    not null default '',
     salary          decimal(13, 4) not null,
     date_of_birth   date           not null,
     date_of_start   date           not null,
@@ -29,7 +34,10 @@ CREATE TABLE Employee
     city            varchar(50)    not null,
     street          varchar(50)    not null,
     zip_code        varchar(9)     not null,
-    password        varchar(100)   not null
+    password        varchar(100)   not null,
+    foreign key (role) references Role(role_name)
+                        on update cascade 
+                        on delete set default
 );
 
 CREATE TABLE Customer_Card

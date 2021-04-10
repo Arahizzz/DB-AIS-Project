@@ -32,6 +32,7 @@ namespace DBAIS
         {
             services.Configure<DbOptions>(Configuration.GetSection("Postgres"));
             services.AddSingleton<EmployeeUserRepository>();
+            services.AddSingleton<RoleRepository>();
             services.AddSingleton<ProductsRepository>();
             services.AddSingleton<CustomerRepository>();
             services.AddSingleton<EmployeeRepository>();
@@ -42,7 +43,7 @@ namespace DBAIS
 
             services.AddIdentity<EmployeeUser, string>()
                 .AddUserStore<EmployeeUserStore>()
-                .AddRoleStore<EmployeeUserStore>();
+                .AddRoleStore<EmployeeRoleStore>();
 
             services.AddControllers();
             services.AddRazorPages();
