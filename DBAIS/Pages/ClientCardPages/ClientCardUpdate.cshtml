@@ -1,0 +1,82 @@
+﻿@page "/customers/update/{id}"
+@model DBAIS.Pages.ClientCardPages.ClientCardUpdateModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+<div>
+    <!-- Toggle menu -->
+    @{
+        Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+    {
+                    {"/", "Home"},
+                    {"/customers", "Customers"},
+                    {"/customers/update", "Update"},
+                };
+
+    }
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+    <!-- Content -->
+    <div>
+        @{
+            var header = "Current card: " + (Model.Card.Number != null ? Model.Card.Number : "");
+        }
+        <partial name="_EditPageHeader" model="@header" />
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
+            </div>
+        }
+        <form method="post">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <input type="text" asp-for="Surname" class="form-control" placeholder="Surname" value=@(Model.Card != null ? Model.Card.Surname : "")>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Name" value=@(Model.Card != null ? Model.Card.Name : "")>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="Patronym" class="form-control" placeholder="Patronym" value=@(Model.Card != null ? Model.Card.Patronymic : "")>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-4">
+                        <input type="text" asp-for="Telephone" class="form-control" placeholder="+ 38 (xxx) xxxxxxx" value=@(Model.Card != null ? Model.Card.Phone : "")>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <input type="text" asp-for="City" class="form-control" placeholder="City" value=@(Model.Card != null ? Model.Card.City : "")>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="Street" class="form-control" placeholder="Street" value=@(Model.Card != null ? Model.Card.Street : "")>
+                    </div>
+                    <div class="col-3">
+                        <input type="text" asp-for="ZipCode" class="form-control" placeholder="ZipCode" value=@(Model.Card != null ? Model.Card.Zip : "")>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-4">
+                        <input type="number" asp-for="Percent" min="1" max="100" class="form-control" value=@(Model.Card != null ? Model.Card.Percent : "")>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/customers">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-primary" value="Update Customer Card">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

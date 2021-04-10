@@ -64,7 +64,7 @@
             }
 
             <td>@customer.Percent</td>
-            <td><a asp-page="CustomerUpdate" asp-route-id="@customer.Number" class=" text-primary link-primary">Update</a></td>
+            <td><a asp-page="ClientCardUpdate" asp-route-id="@customer.Number" class=" text-primary link-primary">Update</a></td>
             <td>
                 <form method="post">
                     <input type="submit" asp-page-handler="delete" asp-route-id="@customer.Number" class="btn btn-danger" value="Delete">

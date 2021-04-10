@@ -25,9 +25,17 @@ namespace DBAIS.Pages.ClientCardPages
             Customers = await _customerRepository.GetCards(null);
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        public async Task<IActionResult> OnPostDeleteAsync(string id)
         {
-            Customers = new List<Card>();
+            try
+            {
+                await _customerRepository.DeleteCustomer(id);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", "You can`t delete this card");
+            }
+            Customers = await _customerRepository.GetCards(null);
             return Page();
         }
     }
