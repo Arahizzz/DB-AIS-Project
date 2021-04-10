@@ -4,7 +4,7 @@ namespace DBAIS.Models
 {
     public class Card
     {
-        public int Number { get; set; }
+        public string Number { get; set; } = null!;
         public string Name { get; set; } = String.Empty;
         public string Surname { get; set; } = String.Empty;
         public string Patronymic { get; set; } = String.Empty;

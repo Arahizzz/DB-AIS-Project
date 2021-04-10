@@ -110,7 +110,7 @@ namespace DBAIS.Repositories
         {
             return new Card
             {
-                Number = reader.GetInt32(0),
+                Number = reader.GetString(0),
                 Surname = reader.GetString(1),
                 Name = reader.GetString(2),
                 Patronymic = reader.GetString(3),
