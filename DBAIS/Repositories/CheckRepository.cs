@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Models.DTOs;
@@ -34,12 +35,12 @@ namespace DBAIS.Repositories
 
             checkCommand.Parameters.AddRange(new NpgsqlParameter[]
             {
-                new ("check_num", check.Number),
-                new ("id_empl", check.EmployeeId),
+                new NpgsqlParameter<string>("check_num", check.Number),
+                new NpgsqlParameter<string>("id_empl", check.EmployeeId),
                 new NpgsqlParameter<string?>("card_num", check.CardNum),
-                new ("date", check.Date),
-                new ("sum", check.Total),
-                new ("vat", check.Vat)
+                new NpgsqlParameter<DateTime>("date", check.Date),
+                new NpgsqlParameter<decimal>("sum", check.Total),
+                new NpgsqlParameter<decimal>("vat", check.Vat)
             });
 
             await checkCommand.PrepareAsync();
@@ -57,10 +58,10 @@ namespace DBAIS.Repositories
 
                 salesCommand.Parameters.AddRange(new NpgsqlParameter[]
                 {
-                    new ("upc", sale.Upc),
-                    new ("check", check.Number),
-                    new ("count", sale.Count),
-                    new ("price", sale.Price)
+                    new NpgsqlParameter<string>("upc", sale.Upc),
+                    new NpgsqlParameter<string>("check", check.Number),
+                    new NpgsqlParameter<int>("count", sale.Count),
+                    new NpgsqlParameter<decimal>("price", sale.Price)
                 });
 
                 await salesCommand.PrepareAsync();
@@ -88,12 +89,12 @@ namespace DBAIS.Repositories
 
             checkCommand.Parameters.AddRange(new NpgsqlParameter[]
             {
-                new ("check_num", check.Number),
-                new ("id_empl", check.EmployeeId),
-                new ("card_num", check.CardNum),
-                new ("date", check.Date),
-                new ("sum", check.Total),
-                new ("vat", check.Vat)
+                new NpgsqlParameter<string>("check_num", check.Number),
+                new NpgsqlParameter<string>("id_empl", check.EmployeeId),
+                new NpgsqlParameter<string?>("card_num", check.CardNum),
+                new NpgsqlParameter<DateTime>("date", check.Date),
+                new NpgsqlParameter<decimal>("sum", check.Total),
+                new NpgsqlParameter<decimal>("vat", check.Vat)
             });
 
             await checkCommand.PrepareAsync();
@@ -112,10 +113,10 @@ namespace DBAIS.Repositories
 
                 salesCommand.Parameters.AddRange(new NpgsqlParameter[]
                 {
-                    new ("upc", sale.Upc),
-                    new ("check", check.Number),
-                    new ("count", sale.Count),
-                    new ("price", sale.Price)
+                    new NpgsqlParameter<string>("upc", sale.Upc),
+                    new NpgsqlParameter<string>("check", check.Number),
+                    new NpgsqlParameter<int>("count", sale.Count),
+                    new NpgsqlParameter<decimal>("price", sale.Price)
                 });
 
                 await salesCommand.PrepareAsync();
@@ -151,7 +152,7 @@ namespace DBAIS.Repositories
             await command.PrepareAsync();
             await command.ExecuteNonQueryAsync();
         }
-        
+
         public async Task<List<PurchaseInfo>> GetCustomerChecks(string cardNum)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
@@ -196,7 +197,7 @@ namespace DBAIS.Repositories
                 string lastId = currId;
                 while (lastId == currId)
                 {
-                    products.Add(new()
+                    products.Add(new ()
                     {
                         Upc = reader.GetString(3),
                         Id = reader.GetInt32(4),
@@ -238,43 +239,39 @@ namespace DBAIS.Repositories
             var list = new List<Check>();
             if (!reader.Read())
                 return list;
-            
-            while (true)
-            {
-                var products = new List<Sale>();
-                var currId = reader.GetString(0);
-                var info = new Check
-                {
-                    Number = currId,
-                    EmployeeId = reader.GetString(1),
-                    CardNum = NullSafeGetter.GetValueOrDefault<string>(reader, 2),
-                    Date = reader.GetDateTime(3),
-                    Total = reader.GetDecimal(4),
-                    Vat = reader.GetDecimal(5)
-                };
 
-                var lastId = currId;
-                while (lastId == currId)
+            Check? check = null;
+            while (reader.Read())
+            {
+                var currId = reader.GetString(0);
+                if (check?.Number != currId)
                 {
-                    products.Add(new()
+                    check = new Check
+                    {
+                        Number = currId,
+                        EmployeeId = reader.GetString(1),
+                        CardNum = reader.GetValueOrDefault<string>(2),
+                        Date = reader.GetDateTime(3),
+                        Total = reader.GetDecimal(4),
+                        Vat = reader.GetDecimal(5),
+                        Sales = new List<Sale>()
+                    };
+                    list.Add(check);
+                }
+
+                if (!reader.IsDBNull(6))
+                {
+                    check.Sales.Add(new ()
                     {
                         Upc = reader.GetString(6),
                         Check = currId,
                         Count = reader.GetInt32(7),
                         Price = reader.GetDecimal(8)
                     });
-                    if (!reader.Read())
-                    {
-                        info.Sales = products;
-                        list.Add(info);
-                        return list;
-                    }
-                    else lastId = reader.GetString(0);
                 }
-
-                info.Sales = products;
-                list.Add(info);
             }
+
+            return list;
         }
     }
 }
