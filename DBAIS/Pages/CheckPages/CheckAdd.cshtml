@@ -1,0 +1,78 @@
+﻿@page "/checks/add"
+@model DBAIS.Pages.CheckPages.CheckAddModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+<div>
+    <!-- Toggle menu -->
+    @{
+        Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+    {
+                    {"/", "Home"},
+                    {"/checks", "Checks"},
+                    {"/checks/add", "Add"},
+                };
+
+    }
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+    <!-- Content -->
+    <div>
+        @{
+            var header = "Create new check";
+        }
+        <partial name="_EditPageHeader" model="@header" />
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
+            </div>
+        }
+        <form method="post">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="CheckNumber">Check number</label>
+                        <input asp-for="CheckNumber" class="form-control" placeholder="Check number">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="IdEmployee">Employee ID</label>
+                        <select class="custom-select" asp-for="IdEmployee" asp-items="Model.EmployeeOptions"></select>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="Total">Total</label>
+                        <input asp-for="Total" class="form-control" placeholder="Total sum">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="Vat">Vat</label>
+                        <input asp-for="Vat" class="form-control" placeholder="VAT">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="PrintDate">Print date</label>
+                        <input asp-for="PrintDate" class="form-control" placeholder="Date printed">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="CardNumber">Card number</label>
+                        <input asp-for="CardNumber" class="form-control" placeholder="Card number">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/checks">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-success" value="Create Check">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

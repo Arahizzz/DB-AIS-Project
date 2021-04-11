@@ -6,7 +6,7 @@ namespace DBAIS.Models
     public class Check
     {
         public string Number { get; set; } = null!;
-        public string CardNum { get; set; } = null!;
+        public string? CardNum { get; set; }
         public string EmployeeId { get; set; } = null!;
         public DateTime Date { get; set; }
         public decimal Total { get; set; }
