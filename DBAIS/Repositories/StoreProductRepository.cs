@@ -91,9 +91,9 @@ namespace DBAIS.Repositories
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             var queryString = @"select s.upc, p.product_name, s.selling_price, s.products_number, s.promotional_product
-                           from store_product s inner join product p on p.id_product = s.id_product";
+                           from store_product s inner join product p on p.id_product = s.id_product ";
             if (promotionFilter != null)
-                queryString += " where s.promotional_product = @promo";
+                queryString += " where s.promotional_product = @promo ";
             queryString += (name, count) switch
             {
                 (Sort.Ascending, _) => "order by p.product_name asc",

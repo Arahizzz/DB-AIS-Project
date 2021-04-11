@@ -1,0 +1,83 @@
+﻿@page "/storeproducts"
+@model DBAIS.Pages.StoreProductPages.StoreProductsPagesModel
+@{
+    ViewBag.Title = "Storage";
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+        @if (User.IsInRole("manager"))
+        {
+            <div class="col-1">
+                <a href="/storeproducts/add">
+                    <button type="button" class="btn btn-success">Add +</button>
+                </a>
+            </div>
+        }
+        <div class="col">
+
+        </div>
+        <div>
+            <form method="get">
+                <div class="input-group">
+                    <input type="hidden" name="handler" value="ByPromotional" />
+                    <div class="form-check" style="margin-top:6px;margin-right:6px;">
+                        <input class="form-check-input" type="checkbox" id="flexCheckDefault" asp-for="IsPromotional" name="isPromotional">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Only Promotional
+                        </label>
+                    </div>
+                    <select class="custom-select" asp-for="SelectedSort" name="sort">
+                        <option value="None" selected="@(Model.SelectedSort == StoreProductSort.None)">None</option>
+                        <option value="NameAscending" selected="@(Model.SelectedSort == StoreProductSort.NameAscending)">Name Asc</option>
+                        <option value="NameDescending" selected="@(Model.SelectedSort == StoreProductSort.NameDescending)">Name Desc</option>
+                        <option value="CountAscending" selected="@(Model.SelectedSort == StoreProductSort.CountAscending)">Count Asc</option>
+                        <option value="CountDescending" selected="@(Model.SelectedSort == StoreProductSort.CountDescending)">Count Desc</option>
+                    </select>
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" value="Get">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<h1>Storage</h1>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">UPC</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Promotional</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model.StoreProducts)
+        {
+        <tr>
+            <td>@product.Upc</td>
+            <td>@product.Name</td>
+            <td>@product.Price</td>
+            <td>@product.Count</td>
+            <td>@(@product.IsPromotion ? "Yes" : "-")</td>
+            <td><a asp-page="StoreProductUpdate" asp-route-id="@product.Upc" class=" text-primary link-primary">Update</a></td>
+            <td>
+                <form method="post">
+                    <input type="submit" asp-page-handler="delete" asp-route-id="@product.Upc" class="btn btn-danger" value="Delete">
+                </form>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
