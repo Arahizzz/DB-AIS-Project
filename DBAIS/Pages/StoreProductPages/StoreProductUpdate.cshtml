@@ -1,0 +1,81 @@
+﻿@page "/storeproducts/update/{id}"
+@model DBAIS.Pages.StoreProductPages.StoreProductUpdateModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+<div>
+    <!-- Toggle menu -->
+    @{
+        Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+    {
+                    {"/", "Home"},
+                    {"/storeproducts", "Storage"},
+                    {"/storeproducts/update", "Update"},
+                };
+
+    }
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+    <!-- Content -->
+    <div>
+        @{
+            var header = "Current store product UPC: " + (Model.StoreProduct != null ? Model.StoreProduct.Upc : "");
+        }
+        <partial name="_EditPageHeader" model="@header" />
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
+            </div>
+        }
+        <form method="post">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <input asp-for="Price" class="form-control" value=@(Model.StoreProduct != null ? Model.StoreProduct.Price : 0.01)>
+                    </div>
+                    <div class="col-3">
+                        <input asp-for="Count" class="form-control" value=@(Model.StoreProduct != null ? Model.StoreProduct.Count : 0)>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <select asp-for="ProductId" asp-items="Model.ProductOptions" class="custom-select" value=@(Model.StoreProduct != null ? Model.StoreProduct.ProductId : "")></select>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flexCheckDefault" asp-for="IsPromotion">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                Is promotional
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <select asp-for="UpcPromotional" id="upcPromotional" asp-items="Model.PromotionOptions" class="custom-select" value=@(Model.StoreProduct != null ? Model.StoreProduct.UpcPromotional : "")></select>
+                        <label class="form-label" for="upcPromotional">
+                            UPC Promotional
+                        </label>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/storeproducts">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-primary" value="Update Store Product">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Models.DTOs;
 using DBAIS.Options;
+using DBAIS.Repositories.Utils;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -135,7 +136,7 @@ namespace DBAIS.Repositories
             return new StoreProduct
             {
                 Upc = reader.GetString(0),
-                UpcPromotional = reader.GetString(1),
+                UpcPromotional = NullSafeGetter.GetValueOrDefault<string>(reader, 1),
                 ProductId = reader.GetInt32(2),
                 Price = reader.GetDecimal(3),
                 Count = reader.GetInt32(4),
