@@ -27,52 +27,100 @@
                 <div class="validation" asp-validation-summary="All"></div>
             </div>
         }
-    <form method="post">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-3">
-                    <label asp-for="CheckNumber">Check number</label>
-                    <input asp-for="CheckNumber" class="form-control" placeholder="Check number">
+        <form method="post">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="CheckNumber">Check number</label>
+                        <input asp-for="CheckNumber" class="form-control" placeholder="Check number">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="IdEmployee">Employee ID</label>
+                        <select class="custom-select" asp-for="IdEmployee" asp-items="Model.EmployeeOptions"></select>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <label asp-for="IdEmployee">Employee ID</label>
-                    <select class="custom-select" asp-for="IdEmployee" asp-items="Model.EmployeeOptions"></select>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <p>Total: @Model.Total</p>
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="Vat">Vat</label>
+                        <input asp-for="Vat" class="form-control" placeholder="VAT">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="PrintDate">Print date</label>
+                        <input asp-for="PrintDate" class="form-control" placeholder="Date printed">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="CardNumber">Card number</label>
+                        <input asp-for="CardNumber" class="form-control" placeholder="Card number">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/checks">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-success" value="Update Check">
+                    </div>
                 </div>
             </div>
-            <br />
-            <div class="row">
-                <div class="col-3">
-                    <label asp-for="Total">Total</label>
-                    <input asp-for="Total" class="form-control" placeholder="Total sum">
-                </div>
-                <div class="col-3">
-                    <label asp-for="Vat">Vat</label>
-                    <input asp-for="Vat" class="form-control" placeholder="VAT">
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col-3">
-                    <label asp-for="PrintDate">Print date</label>
-                    <input asp-for="PrintDate" class="form-control" placeholder="Date printed">
-                </div>
-                <div class="col-3">
-                    <label asp-for="CardNumber">Card number</label>
-                    <input asp-for="CardNumber" class="form-control" placeholder="Card number">
-                </div>
-            </div>
-            <br />
-            <div class="row">
-                <div class="col-2">
-                    <a href="/checks">
-                        <button type="button" class="btn btn-secondary">Cancel</button>
-                    </a>
-                </div>
-                <div class="col-2">
-                    <input type="submit" class="btn btn-success" value="Update Check">
+        </form>
+
+
+        @{
+            var header2 = "Add products to check";
+        }
+        <form method="post" asp-page-handler="CreateSale">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-2">
+                        <input type="text" name="saleUpc" class="form-control" placeholder="UPC">
+                    </div>
+                    <div class="col-2">
+                        <input type="number" name="count" class="form-control" placeholder="Count">
+                    </div>
+                    <div class="col-2">
+                        <input type="number" name="price" class="form-control" placeholder="Price">
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-success" value="Create Sale">
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+        <partial name="_EditPageHeader" model="@header2" />
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Upc</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sale in Model.CurrentCheck.Sales)
+                {
+                    <tr>
+                        <td>@sale.Upc</td>
+                        <td>@sale.Count</td>
+                        <td>@sale.Price</td>
+                        <td>
+                            <form method="post">
+                                <input type="submit" asp-page-handler="DeleteSale" asp-route-id="@sale.Upc" class="btn btn-danger" value="Delete">
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
     </div>
 </div>

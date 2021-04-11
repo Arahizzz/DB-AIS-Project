@@ -44,17 +44,18 @@ namespace DBAIS.Pages.CheckPages
         public int Vat { get; set; }
 
         public List<SelectListItem> EmployeeOptions { get; set; }
+        public List<SelectListItem> CardsOptions { get; set; }
 
-        //public List<SelectListItem> ProductOptions { get; set; }
-        //public List<SelectListItem> PromotionOptions { get; set; }
 
         private readonly EmployeeRepository _employeeRepository;
         private readonly CheckRepository _checkRepository;
+        private readonly CustomerRepository _customerRepository;
 
-        public CheckUpdateModel(CheckRepository checkRepository, EmployeeRepository employeeRepository)
+        public CheckUpdateModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository)
         {
             _checkRepository = checkRepository;
             _employeeRepository = employeeRepository;
+            _customerRepository = customerRepository;
         }
 
         private async Task InitModel(string upc)
@@ -66,26 +67,19 @@ namespace DBAIS.Pages.CheckPages
                                       Value = e.Id,
                                       Text = e.Id
                                   }).ToList();
-            /*StoreProduct = await _storeProductRepository.GetProduct(upc);
-            var products = await _productsRepository.GetProducts();
-            ProductOptions = products.Select(p =>
+            var cards = await _customerRepository.GetCards(null);
+            CardsOptions = new List<SelectListItem>();
+            CardsOptions.Add(new SelectListItem
+            {
+                Value = "",
+                Text = "-"
+            });
+            CardsOptions.AddRange(cards.Select(c =>
                                   new SelectListItem
                                   {
-                                      Value = p.Id.ToString(),
-                                      Text = p.Name,
-                                      Selected = p.Id.Equals(StoreProduct.ProductId)
-                                  }).ToList();
-
-            var storeProducts = await _storeProductRepository.GetStoreProductsInfo(Sort.None, Sort.None, false);
-            PromotionOptions = storeProducts.Select(p =>
-                                  new SelectListItem
-                                  {
-                                      Value = p.Upc,
-                                      Text = p.Name,
-                                      Selected = p.Upc.Equals(StoreProduct.UpcPromotional)
-                                  }).ToList().Where(x => !x.Value.Equals(StoreProduct.Upc)).ToList();
-
-            IsPromotion = StoreProduct.IsPromotion;*/
+                                      Value = c.Number,
+                                      Text = c.Number
+                                  }).ToList());
         }
         public async Task<IActionResult> OnGetAsync(string? id)
         {
@@ -98,6 +92,18 @@ namespace DBAIS.Pages.CheckPages
             {
                 return NotFound();
             }
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostCreateSale([FromForm] string saleUpc, [FromForm] int count, [FromForm] decimal price)
+        {
+            //await InitModel(id);
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostDeleteSale([FromForm] string id)
+        {
+            //Sales.Add(new Sale { Check = "check", Upc = saleUpc, Count = count, Price = price });
             return Page();
         }
 

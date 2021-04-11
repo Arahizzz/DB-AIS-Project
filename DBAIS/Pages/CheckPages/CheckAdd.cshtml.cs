@@ -18,7 +18,7 @@ namespace DBAIS.Pages.CheckPages
 
         // Form data
         [BindProperty]
-        [MaxLength(10)]
+        [MaxLength(13)]
         public string? CardNumber { get; set; }
 
         [BindProperty]
@@ -33,22 +33,21 @@ namespace DBAIS.Pages.CheckPages
         public DateTime PrintDate { get; set; }
 
         [BindProperty]
-        [Range(0, int.MaxValue)]
-        public int Total { get; set; }
-
-        [BindProperty]
         [Range(0, 100)]
         public int Vat { get; set; }
 
         public List<SelectListItem> EmployeeOptions { get; set; }
+        public List<SelectListItem> CardsOptions { get; set; }
 
         private readonly EmployeeRepository _employeeRepository;
         private readonly CheckRepository _checkRepository;
+        private readonly CustomerRepository _customerRepository;
 
-        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository)
+        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository)
         {
             _checkRepository = checkRepository;
             _employeeRepository = employeeRepository;
+            _customerRepository = customerRepository;
         }
 
         private async Task InitModel()
@@ -60,6 +59,19 @@ namespace DBAIS.Pages.CheckPages
                                       Value = e.Id,
                                       Text = e.Id
                                   }).ToList();
+            var cards = await _customerRepository.GetCards(null);
+            CardsOptions = new List<SelectListItem>();
+            CardsOptions.Add(new SelectListItem
+            {
+                Value = "",
+                Text = "-"
+            });
+            CardsOptions.AddRange(cards.Select(c =>
+                                  new SelectListItem
+                                  {
+                                      Value = c.Number,
+                                      Text = c.Number
+                                  }).ToList());
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -80,10 +92,10 @@ namespace DBAIS.Pages.CheckPages
                 var newCheck = new Models.Check
                 {
                     Number = CheckNumber,
-                    CardNum = CardNumber,
+                    CardNum = CardNumber != "" ? CardNumber : null,
                     Date = PrintDate,
                     EmployeeId = IdEmployee,
-                    Total = Total,
+                    Total = 0,
                     Vat = Vat
                 };
                 await _checkRepository.AddCheck(newCheck);
