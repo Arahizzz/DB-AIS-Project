@@ -58,7 +58,7 @@ namespace DBAIS.Pages.CheckPages
             _customerRepository = customerRepository;
         }
 
-        private async Task InitModel(string upc)
+        private async Task InitModel(string id)
         {
             var employees = await _employeeRepository.GetCashiers(Sort.None);
             EmployeeOptions = employees.Select(e =>
@@ -80,6 +80,8 @@ namespace DBAIS.Pages.CheckPages
                                       Value = c.Number,
                                       Text = c.Number
                                   }).ToList());
+            var checks = await _checkRepository.GetChecks(null);
+            CurrentCheck = checks.Find(x => x.Number.Equals(id));
         }
         public async Task<IActionResult> OnGetAsync(string? id)
         {
