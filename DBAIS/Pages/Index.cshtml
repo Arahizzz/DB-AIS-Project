@@ -14,8 +14,16 @@
         @if (User.Identity.IsAuthenticated)
         {
             <p>@User.Identity.Name</p>
-            <p>@User.Identity.AuthenticationType</p>
-            <form method="post" asp-controller="SignInPage" asp-action="Logout">
+            @if (User.IsInRole("cashier"))
+            {
+                <p>POOF You are cashier</p>
+            }
+            @if (User.IsInRole("manager"))
+            {
+                <p>POOF You are manager</p>
+            }
+
+            <form method="post" asp-page-handler="logout">
                 <input type="submit" value="Sign Out" />
             </form>
         }
