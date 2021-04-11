@@ -87,7 +87,7 @@ namespace DBAIS.Pages.CheckPages
                     Vat = Vat
                 };
                 await _checkRepository.AddCheck(newCheck);
-                return Redirect("/customers");
+                return Redirect("/checks");
             }
         }
     }

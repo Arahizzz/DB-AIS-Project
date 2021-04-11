@@ -36,7 +36,7 @@ namespace DBAIS.Repositories
             {
                 new ("check_num", check.Number),
                 new ("id_empl", check.EmployeeId),
-                new ("card_num", check.CardNum),
+                new NpgsqlParameter<string?>("card_num", check.CardNum),
                 new ("date", check.Date),
                 new ("sum", check.Total),
                 new ("vat", check.Vat)
@@ -223,7 +223,7 @@ namespace DBAIS.Repositories
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             var queryString = @"select c.check_number, id_employee, card_number, print_date, sum_total, 
                                 vat, upc, product_number, selling_price 
-                                from ""Check"" c inner join sale s on c.check_number = s.check_number";
+                                from ""Check"" c left join sale s on c.check_number = s.check_number";
 
             if (cashier != null)
                 queryString += " where c.id_employee = @empl";
