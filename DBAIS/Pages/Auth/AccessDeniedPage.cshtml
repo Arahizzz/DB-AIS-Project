@@ -1,0 +1,17 @@
+﻿@page "/Account/AccessDenied"
+@model DBAIS.Pages.Auth.AccessDeniedPageModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<!-- Toggle menu -->
+@{
+    Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Return Home"},
+                };
+
+}
+<partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+
+<h2>You do not have the rights of a manager</h2>

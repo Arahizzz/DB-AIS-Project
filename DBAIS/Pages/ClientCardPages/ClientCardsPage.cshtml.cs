@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DBAIS.Pages.ClientCardPages
 {
+    [Authorize(Roles = "cashier, manager")]
     public class ClientCardsPageModel : PageModel
     {
         private readonly CustomerRepository _customerRepository;
