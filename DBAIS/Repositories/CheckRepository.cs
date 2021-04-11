@@ -239,43 +239,39 @@ namespace DBAIS.Repositories
             var list = new List<Check>();
             if (!reader.Read())
                 return list;
-            
-            while (true)
-            {
-                var products = new List<Sale>();
-                var currId = reader.GetString(0);
-                var info = new Check
-                {
-                    Number = currId,
-                    EmployeeId = reader.GetString(1),
-                    CardNum = NullSafeGetter.GetValueOrDefault<string>(reader, 2),
-                    Date = reader.GetDateTime(3),
-                    Total = reader.GetDecimal(4),
-                    Vat = reader.GetDecimal(5)
-                };
 
-                var lastId = currId;
-                while (lastId == currId)
+            Check? check = null;
+            while (reader.Read())
+            {
+                var currId = reader.GetString(0);
+                if (check?.Number != currId)
                 {
-                    products.Add(new()
+                    check = new Check
+                    {
+                        Number = currId,
+                        EmployeeId = reader.GetString(1),
+                        CardNum = reader.GetValueOrDefault<string>(2),
+                        Date = reader.GetDateTime(3),
+                        Total = reader.GetDecimal(4),
+                        Vat = reader.GetDecimal(5),
+                        Sales = new List<Sale>()
+                    };
+                    list.Add(check);
+                }
+
+                if (!reader.IsDBNull(6))
+                {
+                    check.Sales.Add(new ()
                     {
                         Upc = reader.GetString(6),
                         Check = currId,
                         Count = reader.GetInt32(7),
                         Price = reader.GetDecimal(8)
                     });
-                    if (!reader.Read())
-                    {
-                        info.Sales = products;
-                        list.Add(info);
-                        return list;
-                    }
-                    else lastId = reader.GetString(0);
                 }
-
-                info.Sales = products;
-                list.Add(info);
             }
+
+            return list;
         }
     }
 }
