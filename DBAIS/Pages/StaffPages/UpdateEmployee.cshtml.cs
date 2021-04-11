@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DBAIS.Pages.ClientCardPages
+namespace DBAIS.Pages.StaffPages
 {
-    [Authorize(Roles = "cashier, manager")]
-    public class ClientCardUpdateModel : PageModel
+    [Authorize(Roles = "manager")]
+    public class UpdateEmployeeModel : PageModel
     {
 
-        // Current product
-        public Models.Card Card { get; set; }
+        // Current employee
+        public Models.Employee Employee { get; set; }
 
         // Form data
 
@@ -48,22 +48,32 @@ namespace DBAIS.Pages.ClientCardPages
         public string? ZipCode { get; set; }
 
         [BindProperty]
-        [Range(1, 100)]
-        public int Percent { get; set; }
+        public string Role { get; set; }
 
-        private readonly CustomerRepository _customerRepository;
+        [BindProperty]
+        [Range(0,double.MaxValue)]
+        public decimal Salary { get; set; }
 
-        public ClientCardUpdateModel(CustomerRepository customerRepository)
+        [BindProperty]
+        [DataType(DataType.Date)]
+        public DateTime DateOfBirth { get; set; }
+
+        [BindProperty]
+        [DataType(DataType.Date)]
+        public DateTime DateOfStart { get; set; }
+
+        private readonly EmployeeRepository _employeeRepository;
+
+        public UpdateEmployeeModel(EmployeeRepository employeeRepository)
         {
-            _customerRepository = customerRepository;
+            _employeeRepository = employeeRepository;
         }
 
         private async Task InitModel(string number)
         {
-            var cards = await _customerRepository.GetCards(null);
-            Card = cards.Find(x => x.Number.Equals(number));
+            var cards = await _employeeRepository.GetCashiers(Models.Sort.None);
+            Employee = cards.Find(x => x.Id.Equals(number));
         }
-
         public async Task<IActionResult> OnGetAsync(string? id)
         {
             if (id == null)
@@ -71,7 +81,7 @@ namespace DBAIS.Pages.ClientCardPages
                 return NotFound();
             }
             await InitModel(id);
-            if (Card == null)
+            if (Employee == null)
             {
                 return NotFound();
             }
@@ -87,21 +97,25 @@ namespace DBAIS.Pages.ClientCardPages
             }
             else
             {
-                var newCard = new Models.Card
+                var newEmployee = new Models.Employee
                 {
-                    Number = id,
+                    Id = id,
                     Surname = Surname,
                     Patronymic = Patronym,
                     Name = Name,
-                    Phone = Telephone,
+                    PhoneNumber = Telephone,
                     City = City,
                     Street = Street,
                     Zip = ZipCode,
-                    Percent = Percent
+                    DateOfBirth = DateOfBirth,
+                    DateOfStart = DateOfStart,
+                    Role = Role,
+                    Salary = Salary
                 };
-                await _customerRepository.EditCard(newCard);
-                return Redirect("/customers");
+                await _employeeRepository.EditEmployee(newEmployee);
+                return Redirect("/staff");
             }
         }
+
     }
 }

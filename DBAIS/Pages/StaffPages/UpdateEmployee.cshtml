@@ -1,0 +1,107 @@
+﻿@page "/staff/update/{id}"
+@model DBAIS.Pages.StaffPages.UpdateEmployeeModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+<div>
+    <!-- Toggle menu -->
+    @{
+        Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/staff", "Staff"},
+                    {"/staff/update", "Update"},
+                };
+
+    }
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+    <!-- Content -->
+    <div>
+        @{
+            var header = "Current employee id: " + (Model.Employee != null ? Model.Employee.Id : "");
+        }
+        <partial name="_EditPageHeader" model="@header" />
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
+            </div>
+        }
+        <form method="post">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="Surname">Surname</label>
+                        <input type="text" asp-for="Surname" class="form-control" placeholder="Surname" value=@(Model.Employee.Surname)>
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="Name">Name</label>
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Name" value=@(Model.Employee.Name)>
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="Patronym">Patronym</label>
+                        <input type="text" asp-for="Patronym" class="form-control" placeholder="Patronym" value=@(Model.Employee.Patronymic)>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="Telephone">Telephone</label>
+                        <input type="text" asp-for="Telephone" class="form-control" placeholder="+ 38 (xxx) xxxxxxx" value=@(Model.Employee.PhoneNumber)>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="City">City</label>
+                        <input type="text" asp-for="City" class="form-control" placeholder="City" value=@(Model.Employee.City)>
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="Street">Street</label>
+                        <input type="text" asp-for="Street" class="form-control" placeholder="Street" value=@(Model.Employee.Street)>
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="ZipCode">ZipCode</label>
+                        <input type="text" asp-for="ZipCode" class="form-control" placeholder="ZipCode" value=@(Model.Employee.Zip)>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="Salary">Salary</label>
+                        <input asp-for="Salary" class="form-control" value=@(Model.Employee.Salary)>
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="Role">Role</label>
+                        <select type="text" asp-for="Role" class="form-control">
+                            <option value="cashier" selected="@(@Model.Employee.Role == "cashier")">Cashier</option>
+                            <option value="manager" selected="@(@Model.Employee.Role == "manager")">Manager</option>
+                        </select>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-3">
+                        <label asp-for="DateOfBirth">Date of birth</label>
+                        <input class="form-control" type="date" asp-for="DateOfBirth" value="@Model.Employee.DateOfBirth.Date.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-3">
+                        <label asp-for="DateOfStart">Date of start</label>
+                        <input class="form-control" type="date" asp-for="DateOfStart" value="@Model.Employee.DateOfStart.Date.ToString("yyyy-MM-dd")">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/staff">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-primary" value="Update Employee">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

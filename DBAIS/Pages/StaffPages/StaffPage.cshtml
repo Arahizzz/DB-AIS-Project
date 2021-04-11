@@ -90,7 +90,7 @@
                 <td>
                     @if (User.IsInRole("manager"))
                     {
-                        <a asp-page="EmployeeUpdate" asp-route-id="@empl.Id" class=" text-primary link-primary">Update</a>
+                        <a asp-page="UpdateEmployee" asp-route-id="@empl.Id" class=" text-primary link-primary">Update</a>
                     }
                 </td>
             </tr>
