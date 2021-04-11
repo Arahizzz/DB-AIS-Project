@@ -36,8 +36,7 @@ namespace DBAIS.Pages.CheckPages
         [Range(0, 100)]
         public int Vat { get; set; }
 
-        [BindProperty]
-        public List<Sale> Sales { get; set; }
+        [BindProperty] public IList<Sale> Sales { get; set; } = ArraySegment<Sale>.Empty;
 
         public List<SelectListItem> EmployeeOptions { get; set; }
         public List<SelectListItem> CardsOptions { get; set; }

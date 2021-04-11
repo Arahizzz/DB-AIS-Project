@@ -62,6 +62,39 @@
                     <div class="col-2">
                         <button class="btn btn-secondary" onclick="return addProduct()">Add Product</button>
                     </div>
+                    @for (var i = 0; i < Model.Sales.Count; i++)
+                    {
+                        var sale = Model.Sales[i];
+                        <div class="row" data-row="@i">
+                            <div class="col-3">
+                                <label>
+                                    UPC:
+                                    <input type="text" name="Sales[@i].Upc" class="form-control upc" required value="@sale.Upc"/>
+                                </label>
+                            </div>
+                            <div class="col-2">
+                                <label>
+                                    Amount:
+                                    <input type="number" min="0" name="Sales[@i].Count" value="@sale.Count" class="form-control count" required />
+                                </label>
+                            </div>
+                            <div class="col-2">
+                                <label>
+                                    Price:
+                                    <input type="number" name="Sales[@i].Price" value="@sale.Price" class="form-control price" readonly required/>
+                                </label>
+                            </div>
+                            <div class="col-2">
+                                <label>
+                                    Subtotal:
+                                    <input type="number" value="@(sale.Price * sale.Count)" class="form-control subtotal" disabled/>
+                                </label>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn btn-secondary remove-item">Remove</button>
+                            </div>
+                        </div>
+                    }
                 </div>
                 <br/>
                 <div class="row">
@@ -87,10 +120,10 @@
 
 @section Scripts {
     <script>
-        let counter = 0;
+        let counter = @Model.Sales.Count;
         function addProduct() {
             $('#items').append(`
-                <div class="row">
+                <div class="row" data-row="${counter}">
                     <div class="col-3">
                         <label>UPC: 
                         <input  type="text" name="Sales[${counter}].Upc" class="form-control upc" required/>
@@ -101,7 +134,7 @@
                         <input type="number" min="0" name="Sales[${counter}].Count" value="1" class="form-control count" required/>
                         </label>
                     </div>
-                    <div class="col-2 price">
+                    <div class="col-2">
                         <label>Price: 
                             <input type="number" name="Sales[${counter}].Price" value="0" class="form-control price" readonly required/>
                         </label>
@@ -121,9 +154,12 @@
         }
         
         $(document).on('change', '.upc', function() {
-          const $input = $(this);
-          const $row = $input.closest('.row');
-          const upc = $input.val();
+          loadPrices($(this));
+        });
+        
+        function loadPrices($upc) {
+          const $row = $upc.closest('.row');
+          const upc = $upc.val();
           fetch(`?handler=price&upc=${upc}`)
           .then(r => r.json())
           .then(r => {
@@ -131,19 +167,30 @@
                     $row.find('.price').val(r.price);
                     $row.find('.count').attr('max', r.count);
                     updateSubTotal($row);
-                    $input.get(0).setCustomValidity('');
+                    $upc.get(0).setCustomValidity('');
                   } else {
-                      $input.get(0).setCustomValidity('Unknown UPC');
+                      $upc.get(0).setCustomValidity('Unknown UPC');
                   }
               });
-        })
+        }
         
         $(document).on('change', '.count', function() {
             updateSubTotal($(this).closest('.row'));
         });
         
         $(document).on('click', '.remove-item', function() {
-            $(this).closest('.row').remove();
+            const row = $(this).closest('.row');
+            let index = row.data('row');
+            row.nextAll().each(function() {
+              const r = $(this);
+              r.find('.upc').attr('name', `Sales[${index}].Upc`);
+              r.find('.price').attr('name', `Sales[${index}].Price`);
+              r.find('.count').attr('name', `Sales[${index}].Count`);
+              r.data('row', index);
+              index++;
+            });
+            row.remove();
+            counter = index;
         });
         
         function updateSubTotal($row){
@@ -163,7 +210,9 @@
             $('#total').text(total);
         }
         
-        
+        $('.upc').each(function() {
+          loadPrices($(this));
+        })
         
     </script>
 }
