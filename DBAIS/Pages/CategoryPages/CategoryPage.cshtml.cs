@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DBAIS.Pages
 {
+    [Authorize(Roles = "cashier, manager")]
     public class CategoryPageModel : PageModel
     {
         private readonly CategoryRepository _categoryRepository;

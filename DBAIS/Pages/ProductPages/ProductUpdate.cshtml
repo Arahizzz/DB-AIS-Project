@@ -31,16 +31,18 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-4">
+                        <label asp-for="ProductName">Product name</label>
                         <input type="text" asp-for="ProductName" class="form-control" placeholder="Product name" value=@(Model.Product != null ? Model.Product.Name : "")>
                     </div>
                     <div class="col-2">
+                        <label asp-for="ProductCategoryId">Category</label>
                         <select class="custom-select" asp-for="ProductCategoryId" asp-items="Model.CategoryOptions"></select>
                     </div>
                 </div>
                 <br />
                 <div class="row">
                     <div class="col-6">
-                        <label for="characteristicsTextArea">Characteristics</label>
+                        <label asp-for="ProductCharacteristics">Characteristics</label>
                         <textarea asp-for="ProductCharacteristics" class="form-control" id="characteristicsTextArea" rows="3"></textarea>
                     </div>
                 </div>

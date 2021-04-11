@@ -80,7 +80,7 @@ namespace DBAIS.Pages.CheckPages
                                       Value = c.Number,
                                       Text = c.Number
                                   }).ToList());
-            var checks = await _checkRepository.GetChecks(null);
+            var checks = await _checkRepository.GetChecks(null, null, null);
             CurrentCheck = checks.Find(x => x.Number.Equals(id));
         }
         public async Task<IActionResult> OnGetAsync(string? id)

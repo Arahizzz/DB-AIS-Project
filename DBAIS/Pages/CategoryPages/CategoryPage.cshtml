@@ -3,8 +3,26 @@
 
 @{
     ViewBag.Title = "Category";
-    Layout = "_Shared/_CategoriesLayoutPage";
+    Layout = "_Shared/_MasterLayoutPage";
 }
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+        @if (User.IsInRole("manager"))
+        {
+            <div class="col-1">
+                <a href="/category/add">
+                    <button type="button" class="btn btn-success">Add +</button>
+                </a>
+            </div>
+            <div class="col">
+
+            </div>
+        }
+    </div>
+</nav>
 
 <h1>Categories</h1>
 @if (ModelState.ErrorCount > 0)
@@ -26,11 +44,19 @@
             <tr>
                 <td>@category.Number</td>
                 <td>@category.Name</td>
-                <td><a asp-page="CategoryUpdate" asp-route-id="@category.Number" class=" text-primary link-primary">Update</a></td>
                 <td>
-                    <form method="post">
-                        <input type="submit" asp-page-handler="delete" asp-route-id="@category.Number" class="btn btn-danger" value="Delete">
-                    </form>
+                    @if (User.IsInRole("manager"))
+                    {
+                        <a asp-page="CategoryUpdate" asp-route-id="@category.Number" class=" text-primary link-primary">Update</a>
+                    }
+                </td>
+                <td>
+                    @if (User.IsInRole("manager"))
+                    {
+                        <form method="post">
+                            <input type="submit" asp-page-handler="delete" asp-route-id="@category.Number" class="btn btn-danger" value="Delete">
+                        </form>
+                    }
                 </td>
             </tr>
         }

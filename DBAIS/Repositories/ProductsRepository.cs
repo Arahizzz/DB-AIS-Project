@@ -73,7 +73,7 @@ namespace DBAIS.Repositories
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             await using var command = new NpgsqlCommand(@"
-        delete from product where category_number = @id
+        delete from product where id_product = @id
 "
                 , conn);
             command.Parameters.Add(new NpgsqlParameter<int>("id", id));

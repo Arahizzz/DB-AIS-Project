@@ -29,13 +29,13 @@ namespace DBAIS.Pages.CheckPages
 
         public async Task OnGetAsync()
         {
-            Checks = await _checkRepository.GetChecks(null);
+            Checks = await _checkRepository.GetChecks(null, null, null);
         }
 
         public async Task OnGetByEmployee([FromQuery] string? employeeId)
         {
             SelectedEmployee = employeeId;
-            Checks = await _checkRepository.GetChecks(employeeId);
+            Checks = await _checkRepository.GetChecks(employeeId, null, null);
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(string id)
@@ -48,7 +48,7 @@ namespace DBAIS.Pages.CheckPages
             {
                 ModelState.AddModelError("", "You can`t delete this check");
             }
-            Checks = await _checkRepository.GetChecks(null);
+            Checks = await _checkRepository.GetChecks(null, null, null);
             return Page();
         }
     }

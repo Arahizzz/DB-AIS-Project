@@ -5,11 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DBAIS.Pages
 {
+    [Authorize(Roles = "manager")]
     public class CategoryUpdateModel : PageModel
     {
 
@@ -17,8 +19,8 @@ namespace DBAIS.Pages
         public Models.Category Category { get; set; }
 
         [BindProperty]
-        [Required]
         [MinLength(3)]
+        [MaxLength(50)]
         public string CategoryName { get; set; }
 
         private readonly CategoryRepository _categoryRepository;

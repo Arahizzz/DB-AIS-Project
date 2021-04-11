@@ -4,22 +4,24 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using DBAIS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DBAIS.Pages.ProductPages
 {
+    [Authorize(Roles = "cashier, manager")]
     public class ProductUpdateModel : PageModel
     {
         
         // Current product
-        
         public Models.Product Product { get; set; }
         
         // Form data
         [BindProperty]
         [MinLength(3)]
+        [MaxLength(50)]
         public string ProductName { get; set; }
 
         [BindProperty]
