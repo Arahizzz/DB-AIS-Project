@@ -34,8 +34,6 @@ namespace DBAIS.Pages
         public async Task<IActionResult> OnPostLogoutAsync()
         {
             await _signInManager.SignOutAsync();
-            //_userManager.GetUserAsync
-            //await _userManager.GetRolesAsync();
             return Redirect("/");
         }
     }

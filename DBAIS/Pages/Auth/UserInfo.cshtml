@@ -1,0 +1,85 @@
+﻿@page "/userinfo"
+@model DBAIS.Pages.Auth.UserInfoModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<!-- Toggle menu -->
+@{
+    Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/userinfo", "User info"}
+                };
+
+}
+<partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+
+<h2>User Info</h2>
+<div class="col-md-8">
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Full Name</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    @(Model.UserInfo.Surname) @(Model.UserInfo.Name) @(Model.UserInfo.Patronymic)
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Id</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    @(Model.UserInfo.Id)
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Phone</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    @(Model.UserInfo.PhoneNumber)
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Address </h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    @(Model.UserInfo.City), @(Model.UserInfo.Street), @(Model.UserInfo.Zip)
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Date of birth</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    @(Model.UserInfo.DateOfBirth.Date)
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Date of start</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    @(Model.UserInfo.DateOfStart.Date)
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-sm-3">
+                    <h6 class="mb-0">Salary</h6>
+                </div>
+                <div class="col-sm-9 text-secondary">
+                    @(Model.UserInfo.Salary)
+                </div>
+            </div>
+        </div>
+    </div>

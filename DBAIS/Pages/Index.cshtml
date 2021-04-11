@@ -13,29 +13,26 @@
         </div>
         @if (User.Identity.IsAuthenticated)
         {
-            <p>@User.Identity.Name</p>
-            @if (User.IsInRole("cashier"))
-            {
-                <p>POOF You are cashier</p>
-            }
-            @if (User.IsInRole("manager"))
-            {
-                <p>POOF You are manager</p>
-            }
-
-            <form method="post" asp-page-handler="logout">
-                <input type="submit" value="Sign Out" />
-            </form>
+            <div class="col-1">
+                <a href="/userinfo">
+                    <button type="button" class="btn btn-primary">User Info</button>
+                </a>
+            </div>
+            <div class="col-1">
+                <form method="post" asp-page-handler="logout">
+                    <input type="submit" class="btn btn-secondary" value="Sign Out" />
+                </form>
+            </div>
         }
         else
         {
             <div class="col-1">
-                <a href="/signin">
+                <a href="/Account/Login">
                     <button type="button" class="btn btn-primary">Sign In</button>
                 </a>
             </div>
             <div class="col-1">
-                <a href="/signup">
+                <a href="/Account/SignUp">
                     <button type="button" class="btn btn-primary">Sign Up</button>
                 </a>
             </div>
