@@ -13,7 +13,10 @@ namespace DBAIS.Pages.ClientCardPages
     [Authorize(Roles = "cashier, manager")]
     public class ClientCardsPageModel : PageModel
     {
+
         private readonly CustomerRepository _customerRepository;
+        [BindProperty]
+        public int? SelectedPercent { get; set; }
 
         public ClientCardsPageModel(CustomerRepository customerRepository)
         {
@@ -25,6 +28,12 @@ namespace DBAIS.Pages.ClientCardPages
         public async Task OnGetAsync()
         {
             Customers = await _customerRepository.GetCards(null);
+        }
+
+        public async Task OnGetByPercent([FromQuery] int? percent)
+        {
+            SelectedPercent = percent;
+            Customers = await _customerRepository.GetCards(percent);
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(string id)
