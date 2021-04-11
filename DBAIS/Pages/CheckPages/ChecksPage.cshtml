@@ -8,7 +8,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <partial name="_ToggleSidebarButton" />
-        @if (User.IsInRole("manager"))
+        @if (User.IsInRole("manager") || User.IsInRole("cashier"))
         {
             <div class="col-1">
                 <a href="/checks/add">
@@ -22,14 +22,42 @@
         <div>
             <form method="get">
                 <div class="input-group">
-                    <input type="hidden" name="handler" value="ByEmployee" />
-                    <input class="form-control" asp-for="SelectedEmployee" name="employeeId" placeholder="Employee ID"/>
+                    <input type="hidden" name="handler" value="ByPeriod" />
+                    <label class="form-check-label" asp-for="DateFrom" style="margin-top:6px;margin-right:6px;">
+                        From
+                    </label>
+                    <input class="form-control" type="date" asp-for="DateFrom" value="@(@Model.DateFrom != null ? @Model.DateFrom.Date.ToString("yyyy-MM-dd"):"")">
+                    <div class="col-1">
+
+                    </div>
+                    <label class="form-check-label" asp-for="DateTo" style="margin-top:6px;margin-right:6px;">
+                        To
+                    </label>
+                    <input class="form-control" type="date" asp-for="DateTo" value="@(@Model.DateFrom != null ? @Model.DateTo.Date.ToString("yyyy-MM-dd"):"")">
                     <div class="input-group-append">
                         <input class="btn btn-outline-secondary" type="submit" value="Get">
                     </div>
                 </div>
             </form>
         </div>
+        @if (User.IsInRole("manager"))
+        {
+            <div class="col">
+
+            </div>
+            <div>
+                <form method="get">
+                    <div class="input-group">
+                        <input type="hidden" name="handler" value="ByEmployee" />
+                        <input class="form-control" asp-for="SelectedEmployee" name="employeeId" placeholder="Employee ID" />
+                        <div class="input-group-append">
+                            <input class="btn btn-outline-secondary" type="submit" value="Get">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
+
     </div>
 </nav>
 

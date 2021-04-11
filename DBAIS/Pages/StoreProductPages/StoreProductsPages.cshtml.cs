@@ -16,7 +16,10 @@ namespace DBAIS.Pages.StoreProductPages
      {
         private readonly CategoryRepository _categoryRepository;
         private readonly StoreProductRepository _storeProductRepository;
+        private readonly ProductsRepository _productsRepository;
 
+        [BindProperty]
+        public string? SelectedUpc { get; set; } = String.Empty;
         [BindProperty]
         public string? SelectedCategory { get; set; } = String.Empty;
         [BindProperty]
@@ -25,10 +28,11 @@ namespace DBAIS.Pages.StoreProductPages
         [BindProperty]
         public StoreProductSort SelectedSort { get; set; } = StoreProductSort.None;
 
-        public StoreProductsPagesModel(StoreProductRepository storeProductRepository, CategoryRepository categoryRepository)
+        public StoreProductsPagesModel(StoreProductRepository storeProductRepository, CategoryRepository categoryRepository, ProductsRepository productsRepository)
         {
             _storeProductRepository = storeProductRepository;
             _categoryRepository = categoryRepository;
+            _productsRepository = productsRepository;
         }
 
         public List<StoreProductDto> StoreProducts { get; set; }
@@ -37,7 +41,34 @@ namespace DBAIS.Pages.StoreProductPages
         {
             StoreProducts = await _storeProductRepository.GetStoreProductsInfo(Sort.None, Sort.None, null);
         }
-
+        public async Task<IActionResult> OnGetByUpc([FromQuery] string upc)
+        {
+            SelectedUpc = upc;
+            StoreProducts = new List<StoreProductDto>();
+            StoreProduct p = null;
+            try
+            {
+                p = await _storeProductRepository.GetProduct(upc);
+            }
+            catch(Exception e)
+            {
+                ModelState.AddModelError("", "Store product by UPC " + upc + " was not found");
+                return Page();
+            }
+            
+            var prods = await _productsRepository.GetProducts();
+            var prod = prods.Find(x => x.Id.Equals(p.ProductId));
+            var product = new StoreProductDto
+            {
+                Upc = p.Upc,
+                Name = prod != null ? prod.Name : "",
+                IsPromotion = p.IsPromotion,
+                Price = p.Price,
+                Count = p.Count
+            };
+            StoreProducts.Add(product);
+            return Page();
+        }
         public async Task OnGetByPromotional([FromQuery] bool isPromotional, [FromQuery] StoreProductSort sort)
         {
             SelectedSort = sort;

@@ -19,6 +19,9 @@ namespace DBAIS.Pages.ClientCardPages
         [BindProperty]
         public int? SelectedPercent { get; set; }
 
+        [BindProperty]
+        public string? SelectedClient { get; set; }
+
         public ClientCardsPageModel(CustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
@@ -35,6 +38,12 @@ namespace DBAIS.Pages.ClientCardPages
         {
             SelectedPercent = percent;
             Customers = await _customerRepository.GetCards(percent);
+        }
+
+        public async Task OnGetBySurname([FromQuery] string? surname)
+        {
+            SelectedClient = surname;
+            Customers = await _customerRepository.GetCards(null);
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(string id)

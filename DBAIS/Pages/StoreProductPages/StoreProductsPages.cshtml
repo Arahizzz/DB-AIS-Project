@@ -16,7 +16,24 @@
                 </a>
             </div>
         }
-        <div class="col">
+        <div class="col-1">
+
+        </div>
+        <div>
+            <form method="get">
+                <div class="input-group">
+                    <input type="hidden" name="handler" value="ByUpc" />
+                    <label class="form-check-label" asp-for="SelectedUpc" style="margin-top:6px;margin-right:6px;">
+                        Find by UPC
+                    </label>
+                    <input type="text" class="form-control" name="upc" asp-for="SelectedUpc" placeholder="UPC" />
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" value="Get">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-1">
 
         </div>
         <div>

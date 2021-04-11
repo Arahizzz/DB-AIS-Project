@@ -35,8 +35,8 @@
                         <input asp-for="CheckNumber" class="form-control" placeholder="Check number">
                     </div>
                     <div class="col-3">
-                        <label asp-for="IdEmployee">Employee ID</label>
-                        <select class="custom-select" asp-for="IdEmployee" asp-items="Model.EmployeeOptions"></select>
+                        <label>Employee ID</label>
+                        <p>@Model.UserInfo.Id</p>
                     </div>
                 </div>
                 <br/>

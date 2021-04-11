@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DBAIS.Pages.CheckPages
 {
-    [Authorize(Roles = "manager")]
+    [Authorize(Roles = "cashier, manager")]
     public class CheckAddModel : PageModel
     {
 
@@ -25,12 +26,10 @@ namespace DBAIS.Pages.CheckPages
         [MaxLength(10)]
         public string CheckNumber { get; set; }
 
-        [BindProperty]
-        [MaxLength(10)]
         public string IdEmployee { get; set; }
 
         [BindProperty]
-        public DateTime PrintDate { get; set; }
+        public DateTime PrintDate { get; set; } = DateTime.Now;
 
         [BindProperty]
         [Range(0, 100)]
@@ -46,12 +45,17 @@ namespace DBAIS.Pages.CheckPages
         private readonly CustomerRepository _customerRepository;
         private readonly StoreProductRepository _storeProducts;
 
-        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository, StoreProductRepository storeProducts)
+        private readonly UserManager<EmployeeUser> _userManager;
+
+        public EmployeeUser? UserInfo { get; set; }
+
+        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository, StoreProductRepository storeProducts, UserManager<EmployeeUser> userManager)
         {
             _checkRepository = checkRepository;
             _employeeRepository = employeeRepository;
             _customerRepository = customerRepository;
             _storeProducts = storeProducts;
+            _userManager = userManager;
         }
 
         private async Task InitModel()
@@ -76,6 +80,11 @@ namespace DBAIS.Pages.CheckPages
                                       Value = c.Number,
                                       Text = c.Number
                                   }).ToList());
+            if (User.IsInRole("cashier") || User.IsInRole("manager"))
+            {
+                UserInfo = await _userManager.FindByNameAsync(User.Identity.Name);
+                IdEmployee = UserInfo.Id;
+            }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -99,9 +108,9 @@ namespace DBAIS.Pages.CheckPages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            await InitModel();
             if (!ModelState.IsValid)
             {
-                await InitModel();
                 return Page();
             }
             else
