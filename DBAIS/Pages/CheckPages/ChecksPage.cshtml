@@ -1,0 +1,81 @@
+﻿@page "/checks"
+@model DBAIS.Pages.CheckPages.ChecksPageModel
+@{
+    ViewBag.Title = "Checks";
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+        @if (User.IsInRole("manager"))
+        {
+            <div class="col-1">
+                <a href="/checks/add">
+                    <button type="button" class="btn btn-success">Add +</button>
+                </a>
+            </div>
+        }
+        <div class="col">
+
+        </div>
+        <div>
+            <form method="get">
+                <div class="input-group">
+                    <input type="hidden" name="handler" value="ByEmployee" />
+                    <input class="form-control" asp-for="SelectedEmployee" name="employeeId" placeholder="Employee ID"/>
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" value="Get">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<h1>Checks</h1>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Check Number</th>
+            <th scope="col">Client card</th>
+            <th scope="col">Employee Id</th>
+            <th scope="col">Date</th>
+            <th scope="col">Total</th>
+            <th scope="col">Vat</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var check in Model.Checks)
+        {
+        <tr>
+            <td>@check.Number</td>
+            <td>@(check.CardNum != null ? check.CardNum : "-")</td>
+            <td>@check.EmployeeId</td>
+            <td>@check.Date</td>
+            <td>@check.Total</td>
+            <td>@check.Vat</td>
+            <td>
+                @if (User.IsInRole("manager"))
+                {
+                    <a asp-page="StoreProductUpdate" asp-route-id="@check.Number" class=" text-primary link-primary">Update</a>
+                }
+            </td>
+            <td>
+                @if (User.IsInRole("manager"))
+                {
+                    <form method="post">
+                        <input type="submit" asp-page-handler="delete" asp-route-id="@check.Number" class="btn btn-danger" value="Delete">
+                    </form>
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Models.DTOs;
 using DBAIS.Options;
+using DBAIS.Repositories.Utils;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -246,7 +247,7 @@ namespace DBAIS.Repositories
                 {
                     Number = currId,
                     EmployeeId = reader.GetString(1),
-                    CardNum = reader.GetString(2),
+                    CardNum = NullSafeGetter.GetValueOrDefault<string>(reader, 2),
                     Date = reader.GetDateTime(3),
                     Total = reader.GetDecimal(4),
                     Vat = reader.GetDecimal(5)
