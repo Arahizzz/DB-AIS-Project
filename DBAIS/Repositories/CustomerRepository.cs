@@ -28,15 +28,15 @@ namespace DBAIS.Repositories
                 , conn);
             command.Parameters.AddRange(new NpgsqlParameter []
             {
-                new ("card_number", card.Number),
-                new ("surname", card.Surname),
-                new ("name", card.Name),
-                new ("patronymic", card.Patronymic),
-                new ("phone_number", card.Phone),
-                new ("city", card.City),
-                new ("street", card.Street),
-                new ("zip", card.Zip),
-                new ("percent", card.Percent)
+                new NpgsqlParameter<string>("card_number", card.Number),
+                new NpgsqlParameter<string>("surname", card.Surname),
+                new NpgsqlParameter<string>("name", card.Name),
+                new NpgsqlParameter<string>("patronymic", card.Patronymic),
+                new NpgsqlParameter<string>("phone_number", card.Phone),
+                new NpgsqlParameter<string?>("city", card.City),
+                new NpgsqlParameter<string?>("street", card.Street),
+                new NpgsqlParameter<string?>("zip", card.Zip),
+                new NpgsqlParameter<int>("percent", card.Percent)
             });
             await conn.OpenAsync();
             await command.PrepareAsync();
@@ -56,15 +56,15 @@ namespace DBAIS.Repositories
                 , conn);
             command.Parameters.AddRange(new NpgsqlParameter []
             {
-                new ("card_number", card.Number),
-                new ("surname", card.Surname),
-                new ("name", card.Name),
-                new ("patronymic", card.Patronymic),
-                new ("phone_number", card.Phone),
-                new ("city", card.City),
-                new ("street", card.Street),
-                new ("zip", card.Zip),
-                new ("percent", card.Percent)
+                new NpgsqlParameter<string>("card_number", card.Number),
+                new NpgsqlParameter<string>("surname", card.Surname),
+                new NpgsqlParameter<string>("name", card.Name),
+                new NpgsqlParameter<string>("patronymic", card.Patronymic),
+                new NpgsqlParameter<string>("phone_number", card.Phone),
+                new NpgsqlParameter<string?>("city", card.City),
+                new NpgsqlParameter<string?>("street", card.Street),
+                new NpgsqlParameter<string?>("zip", card.Zip),
+                new NpgsqlParameter<int>("percent", card.Percent)
             });
             await conn.OpenAsync();
             await command.PrepareAsync();
