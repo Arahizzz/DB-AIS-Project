@@ -59,34 +59,34 @@ values ('cashier');
 
 -- Employee
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id1', 'Davydova', 'Olena', 'Vasylivna', 'cashier', 1500, '1974-05-22', '2006-04-30', '0688856321', 'Kyiv', 'Street1', 1001, 'password');
+VALUES ('id1', 'Davydova', 'Olena', 'Vasylivna', 'cashier', 1500, '1974-05-22', '2006-04-30', '0688856321', 'Kyiv', 'Street1', 1001, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id2', 'Zhukovskaya', 'Olga', 'Nikolaevna', 'manager', 3400, '1981-02-27', '2005-01-23', '0688855321', 'Kyiv', 'Street2', 1002, 'password');
+VALUES ('id2', 'Zhukovskaya', 'Olga', 'Nikolaevna', 'manager', 3400, '1981-02-27', '2005-01-23', '0688855321', 'Kyiv', 'Street2', 1002, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id3', 'Kipelov', 'Anton', 'Valerievich', 'cashier', 1603, '1966-04-07', '2000-04-30', '0688854521', 'Kyiv', 'Street3', 1003, 'password');
+VALUES ('id3', 'Kipelov', 'Anton', 'Valerievich', 'cashier', 1603, '1966-04-07', '2000-04-30', '0688854521', 'Kyiv', 'Street3', 1003, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id4', 'Boychuk', 'Stanislav', 'Petrovich', 'cashier', 1606, '1971-11-11', '2003-01-10', '0686666321', 'Kyiv', 'Street4', 1004, 'password');
+VALUES ('id4', 'Boychuk', 'Stanislav', 'Petrovich', 'cashier', 1606, '1971-11-11', '2003-01-10', '0686666321', 'Kyiv', 'Street4', 1004, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id5', 'Durnov', 'Anton', 'Valeriyovych', 'cashier', 1808, '1977-07-06', '2000-04-30', '0688858721', 'Kyiv', 'Street5', 1005, 'password');
+VALUES ('id5', 'Durnov', 'Anton', 'Valeriyovych', 'cashier', 1808, '1977-07-06', '2000-04-30', '0688858721', 'Kyiv', 'Street5', 1005, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id6', 'Boychenko', 'Lyudmila', 'Vasylivna', 'cashier', 1900, '1966-10-6', '2011-07-27', '0689856321', 'Lviv', 'Street6', 1006, 'password');
+VALUES ('id6', 'Boychenko', 'Lyudmila', 'Vasylivna', 'cashier', 1900, '1966-10-6', '2011-07-27', '0689856321', 'Lviv', 'Street6', 1006, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id7', 'Uwu', 'Mandy', 'Petrovich', 'manager', 3250, '1974-05-22', '2011-06-12', '0688856671', 'Lviv', 'Street7', 1007, 'password');
+VALUES ('id7', 'Uwu', 'Mandy', 'Petrovich', 'manager', 3250, '1974-05-22', '2011-06-12', '0688856671', 'Lviv', 'Street7', 1007, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id8', 'Danilko', 'Brad', 'Olehovych', 'cashier', 1880, '1974-05-22', '2011-05-11', '0688776321', 'Lviv', 'Street8', 1008, 'password');
+VALUES ('id8', 'Danilko', 'Brad', 'Olehovych', 'cashier', 1880, '1974-05-22', '2011-05-11', '0688776321', 'Lviv', 'Street8', 1008, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id9', 'Hanover', 'Mike', 'Denysovych', 'cashier', 1444, '1980-01-21', '2011-04-10', '0689056321', 'Lviv', 'Street9', 1009, 'password');
+VALUES ('id9', 'Hanover', 'Mike', 'Denysovych', 'cashier', 1444, '1980-01-21', '2011-04-10', '0689056321', 'Lviv', 'Street9', 1009, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 INSERT INTO employee (id_employee, empl_surname, empl_name, empl_patronymic, "role", salary, date_of_birth, date_of_start,phone_number,city,street,zip_code,password)
-VALUES ('id10', 'Stuart', 'Jeremy', 'Tarasovych', 'cashier', 1310, '1979-03-24', '2011-03-01', '0663356321', 'Lviv', 'Street10', 1010, 'password');
+VALUES ('id10', 'Stuart', 'Jeremy', 'Tarasovych', 'cashier', 1310, '1979-03-24', '2011-03-01', '0663356321', 'Lviv', 'Street10', 1010, 'AQAAAAEAACcQAAAAEFhGcf0r0vA0iz4/nzG3S4j6CtD8noJpgzLCECOVEr6jabv7b+TOSE2+iuqMR5v0Hw==');
 
 
 INSERT INTO public."Check" (check_number, id_employee, card_number, print_date, sum_total, vat) VALUES ('2428784833', 'id1', '2827353407381', '2021-04-15', 119.0000, 22.0000);
