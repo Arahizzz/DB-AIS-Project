@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Models.DTOs;
 using DBAIS.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DBAIS.Pages.StoreProductPages
 {
-     public class StoreProductsPagesModel : PageModel
+    [Authorize(Roles = "cashier, manager")]
+    public class StoreProductsPagesModel : PageModel
      {
         private readonly CategoryRepository _categoryRepository;
         private readonly StoreProductRepository _storeProductRepository;

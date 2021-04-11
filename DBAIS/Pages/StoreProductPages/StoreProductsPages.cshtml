@@ -71,11 +71,19 @@
             <td>@product.Price</td>
             <td>@product.Count</td>
             <td>@(@product.IsPromotion ? "Yes" : "-")</td>
-            <td><a asp-page="StoreProductUpdate" asp-route-id="@product.Upc" class=" text-primary link-primary">Update</a></td>
             <td>
+                @if (User.IsInRole("manager"))
+                {
+                    <a asp-page="StoreProductUpdate" asp-route-id="@product.Upc" class=" text-primary link-primary">Update</a>
+                }
+            </td>
+            <td>
+                @if (User.IsInRole("manager"))
+                {
                 <form method="post">
                     <input type="submit" asp-page-handler="delete" asp-route-id="@product.Upc" class="btn btn-danger" value="Delete">
                 </form>
+                }
             </td>
         </tr>
         }

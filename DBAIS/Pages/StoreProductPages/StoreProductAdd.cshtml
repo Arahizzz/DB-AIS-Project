@@ -1,0 +1,66 @@
+﻿@page "/storeproducts/add"
+@model DBAIS.Pages.StoreProductPages.StoreProductAddModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+<div>
+    <!-- Toggle menu -->
+    @{
+        Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/storeproducts", "Storage"},
+                    {"/storeproducts/add", "Add"},
+                };
+
+    }
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+    <!-- Content -->
+    <div>
+        @{
+            var header = "Create new store product";
+        }
+        <partial name="_EditPageHeader" model="@header" />
+        @if (ModelState.ErrorCount > 0)
+        {
+            <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+                <div class="validation" asp-validation-summary="All"></div>
+            </div>
+        }
+        <form method="post">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-6">
+                        <input asp-for="ProductUpc" class="form-control"/>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-3">
+                        <input asp-for="Price" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <input asp-for="Count" class="form-control">
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-6">
+                        <select asp-for="ProductId" asp-items="Model.ProductOptions" class="custom-select"></select>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-2">
+                        <a href="/storeproducts">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                        </a>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-primary" value="Create Store Product">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
