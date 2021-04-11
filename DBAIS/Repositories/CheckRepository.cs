@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Models.DTOs;
@@ -219,23 +222,68 @@ namespace DBAIS.Repositories
             }
         }
 
-        public async Task<List<Check>> GetChecks(string? cashier)
+        public async Task<List<Check>> GetChecks(string? cashier, DateTime? from, DateTime? to)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
-            var queryString = @"select c.check_number, id_employee, card_number, print_date, sum_total, 
+            var queryString = new StringBuilder(
+                @"select c.check_number, id_employee, card_number, print_date, sum_total, 
                                 vat, upc, product_number, selling_price 
-                                from ""Check"" c left join sale s on c.check_number = s.check_number";
+                                from ""Check"" c left join sale s on c.check_number = s.check_number");
 
+            if (cashier != null || from != null || to != null)
+                queryString.Append(" where");
             if (cashier != null)
-                queryString += " where c.id_employee = @empl";
+                queryString.Append(" c.id_employee = @empl");
+            if (from != null)
+            {
+                if (cashier != null)
+                    queryString.Append(" and");
+                queryString.Append(" c.print_date >= @from");
+            }
 
-            await using var query = new NpgsqlCommand(queryString, conn);
+            if (to != null)
+            {
+                if (cashier != null || from != null)
+                    queryString.Append(" and");
+                queryString.Append(" c.print_date <= @to");
+            }
+
+
+            await using var query = new NpgsqlCommand(queryString.ToString(), conn);
             if (cashier != null)
                 query.Parameters.Add(new NpgsqlParameter<string>("empl", cashier));
+            if (from != null)
+                query.Parameters.Add(new NpgsqlParameter<DateTime>("from", from.Value));
+            if (to != null)
+                query.Parameters.Add(new NpgsqlParameter<DateTime>("to", to.Value));
+
             await conn.OpenAsync();
             await query.PrepareAsync();
 
             await using var reader = await query.ExecuteReaderAsync();
+            return GetChecksFromSql(reader);
+        }
+
+        public async Task<Check?> GetCheck(string number)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = new StringBuilder(
+                @"select c.check_number, id_employee, card_number, print_date, sum_total, 
+                                vat, upc, product_number, selling_price 
+                                from ""Check"" c left join sale s on c.check_number = s.check_number
+                                where c.check_number = @number");
+            
+            await using var query = new NpgsqlCommand(queryString.ToString(), conn);
+            query.Parameters.Add(new NpgsqlParameter<string>("number", number));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            return GetChecksFromSql(reader).FirstOrDefault();
+        }
+
+        private static List<Check> GetChecksFromSql(IDataReader reader)
+        {
             var list = new List<Check>();
             if (!reader.Read())
                 return list;
