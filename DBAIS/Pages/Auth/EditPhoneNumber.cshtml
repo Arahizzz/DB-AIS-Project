@@ -1,0 +1,44 @@
+﻿@page "/userinfo/editphonenumber"
+@model DBAIS.Pages.Auth.EditPhoneNumberModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<!-- Toggle menu -->
+@{
+    Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/userinfo", "User info"},
+                    {"/userinfo/editphonenumber", "Edit phone number"},
+                };
+
+}
+<partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+
+<h2>Edit Phone number</h2>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
+<form method="post">
+    <div class="row">
+        <div class="col-4">
+            <input asp-for="NewPhoneNumber" class="form-control" placeholder="Phone number" value="@Model.UserInfo.PhoneNumber" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-2">
+            <a href="/userinfo">
+                <button type="button" class="btn btn-secondary">Cancel</button>
+            </a>
+        </div>
+        <div class="col-2">
+            <input type="submit" class="btn btn-success" value="Edit">
+        </div>
+    </div>
+</form>
+

@@ -32,6 +32,7 @@ namespace DBAIS.Repositories
 
         public async Task SetUserNameAsync(EmployeeUser user, string userName, CancellationToken cancellationToken)
         {
+            user.PhoneNumber = userName;
             await _repository.EditEmployeePhone(user);
         }
 

@@ -1,0 +1,135 @@
+﻿@page "/userinfo/update"
+@model DBAIS.Pages.Auth.UserInfoUpdateModel
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<!-- Toggle menu -->
+@{
+    Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
+{
+                    {"/", "Home"},
+                    {"/userinfo", "User info"},
+                    {"/userinfo/update", "Update"}
+                };
+
+}
+<partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+
+<h2>User Info Update</h2>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
+<form method="post">
+    <div class="form-group">
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Full Name</h6>
+                        </div>
+                        <div class="col-sm-3 text-secondary">
+                            <label asp-for="Surname">Surname</label>
+                            <input type="text" asp-for="Surname" class="form-control" placeholder="Surname" value=@(Model.UserInfo.Surname)>
+                        </div>
+                        <div class="col-sm-3 text-secondary">
+                            <label asp-for="Name">Name</label>
+                            <input type="text" asp-for="Name" class="form-control" placeholder="Name" value=@(Model.UserInfo.Name)>
+                        </div>
+                        <div class="col-sm-3 text-secondary">
+                            <label asp-for="Patronym">Patronym</label>
+                            <input type="text" asp-for="Patronym" class="form-control" placeholder="Patronym" value=@(Model.UserInfo.Patronymic)>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Id</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            @(Model.UserInfo.Id)
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Role</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            @(Model.UserInfo.Role)
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Phone</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            @(Model.UserInfo.PhoneNumber)
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Address </h6>
+                        </div>
+                        <div class="col-sm-3 text-secondary">
+                            <label asp-for="City">City</label>
+                            <input type="text" asp-for="City" class="form-control" placeholder="City" value=@(Model.UserInfo.City)>
+                        </div>
+                        <div class="col-sm-3 text-secondary">
+                            <label asp-for="Street">Street</label>
+                            <input type="text" asp-for="Street" class="form-control" placeholder="Street" value=@(Model.UserInfo.Street)>
+                        </div>
+                        <div class="col-sm-3 text-secondary">
+                            <label asp-for="ZipCode">ZipCode</label>
+                            <input type="text" asp-for="ZipCode" class="form-control" placeholder="ZipCode" value=@(Model.UserInfo.Zip)>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Date of birth</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            <input class="form-control" type="date" asp-for="DateOfBirth" value="@Model.UserInfo.DateOfBirth.Date.ToString("yyyy-MM-dd")">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Date of start</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            <input class="form-control" type="date" asp-for="DateOfStart" value="@Model.UserInfo.DateOfStart.Date.ToString("yyyy-MM-dd")">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <h6 class="mb-0">Salary</h6>
+                        </div>
+                        <div class="col-sm-9 text-secondary">
+                            @(Model.UserInfo.Salary)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <a href="/userinfo">
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                </a>
+            </div>
+            <div class="col-2">
+                <input type="submit" class="btn btn-primary" value="Update Employee">
+            </div>
+        </div>
+    </div>
+</form>
+
