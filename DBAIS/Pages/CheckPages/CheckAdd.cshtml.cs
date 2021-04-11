@@ -36,18 +36,23 @@ namespace DBAIS.Pages.CheckPages
         [Range(0, 100)]
         public int Vat { get; set; }
 
+        [BindProperty]
+        public List<Sale> Sales { get; set; }
+
         public List<SelectListItem> EmployeeOptions { get; set; }
         public List<SelectListItem> CardsOptions { get; set; }
 
         private readonly EmployeeRepository _employeeRepository;
         private readonly CheckRepository _checkRepository;
         private readonly CustomerRepository _customerRepository;
+        private readonly StoreProductRepository _storeProducts;
 
-        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository)
+        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository, StoreProductRepository storeProducts)
         {
             _checkRepository = checkRepository;
             _employeeRepository = employeeRepository;
             _customerRepository = customerRepository;
+            _storeProducts = storeProducts;
         }
 
         private async Task InitModel()
@@ -80,6 +85,19 @@ namespace DBAIS.Pages.CheckPages
             return Page();
         }
 
+        public async Task<IActionResult> OnGetPrice([FromQuery] string upc)
+        {
+            try
+            {
+                var product = await _storeProducts.GetProduct(upc);
+                return new JsonResult(new {price = product.Price, count = product.Count});
+            }
+            catch (EntityNotFoundException<StoreProduct, string>)
+            {
+                return new JsonResult(null);
+            }
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -95,8 +113,9 @@ namespace DBAIS.Pages.CheckPages
                     CardNum = CardNumber != "" ? CardNumber : null,
                     Date = PrintDate,
                     EmployeeId = IdEmployee,
-                    Total = 0,
-                    Vat = Vat
+                    Total = Sales.Sum(s => s.Price * s.Count)*1.2m,
+                    Vat = Vat,
+                    Sales = Sales
                 };
                 await _checkRepository.AddCheck(newCheck);
                 return Redirect("/checks");

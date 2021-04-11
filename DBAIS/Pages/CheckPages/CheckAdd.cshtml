@@ -7,28 +7,28 @@
     <!-- Toggle menu -->
     @{
         Dictionary<string, string> breadcrumbRoutes = new Dictionary<string, string>
-    {
-                    {"/", "Home"},
-                    {"/checks", "Checks"},
-                    {"/checks/add", "Add"},
-                };
+        {
+            {"/", "Home"},
+            {"/checks", "Checks"},
+            {"/checks/add", "Add"},
+        };
 
     }
-    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes" />
+    <partial name="_ToggleSidebarWithBreadcrumbs" model="@breadcrumbRoutes"/>
     <!-- Content -->
     <div>
         @{
             var header = "Create new check";
         }
-        <partial name="_EditPageHeader" model="@header" />
+        <partial name="_EditPageHeader" model="@header"/>
         @if (ModelState.ErrorCount > 0)
         {
             <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
                 <div class="validation" asp-validation-summary="All"></div>
             </div>
         }
-        <form method="post">
-            <div class="form-group">
+        <form method="post" enctype="multipart/form-data">
+            <div id="check-form" class="form-group">
                 <div class="row">
                     <div class="col-3">
                         <label asp-for="CheckNumber">Check number</label>
@@ -39,7 +39,7 @@
                         <select class="custom-select" asp-for="IdEmployee" asp-items="Model.EmployeeOptions"></select>
                     </div>
                 </div>
-                <br />
+                <br/>
                 <div class="row">
                     <div class="col-3">
                         <label asp-for="PrintDate">Print date</label>
@@ -50,14 +50,24 @@
                         <input asp-for="Vat" class="form-control" placeholder="VAT">
                     </div>
                 </div>
-                <br />
+                <br/>
                 <div class="row">
                     <div class="col-3">
                         <label asp-for="CardNumber">Card number</label>
                         <select asp-for="CardNumber" class="form-control" asp-items="Model.CardsOptions"></select>
                     </div>
                 </div>
-                <br />
+                <br/>
+                <div id="items" class="row">
+                    <div class="col-2">
+                        <button class="btn btn-secondary" onclick="return addProduct()">Add Product</button>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    Total: <span id="total">0</span>
+                </div>
+                <br/>
                 <div class="row">
                     <div class="col-2">
                         <a href="/checks">
@@ -71,7 +81,89 @@
             </div>
         </form>
 
-        
 
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        let counter = 0;
+        function addProduct() {
+            $('#items').append(`
+                <div class="row">
+                    <div class="col-3">
+                        <label>UPC: 
+                        <input  type="text" name="Sales[${counter}].Upc" class="form-control upc" required/>
+                        </label>
+                    </div>
+                    <div class="col-2">
+                        <label>Amount: 
+                        <input type="number" min="0" name="Sales[${counter}].Count" value="1" class="form-control count" required/>
+                        </label>
+                    </div>
+                    <div class="col-2 price">
+                        <label>Price: 
+                            <input type="number" name="Sales[${counter}].Price" value="0" class="form-control price" readonly required/>
+                        </label>
+                    </div>
+                    <div class="col-2">
+                        <label>Subtotal: 
+                            <input type="number" value="0" class="form-control subtotal" disabled/>
+                        </label>
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-secondary remove-item">Remove</button>
+                    </div>
+                </div>
+            `);
+            counter++;
+            return false;
+        }
+        
+        $(document).on('change', '.upc', function() {
+          const $input = $(this);
+          const $row = $input.closest('.row');
+          const upc = $input.val();
+          fetch(`?handler=price&upc=${upc}`)
+          .then(r => r.json())
+          .then(r => {
+                  if (r){
+                    $row.find('.price').val(r.price);
+                    $row.find('.count').attr('max', r.count);
+                    updateSubTotal($row);
+                    $input.get(0).setCustomValidity('');
+                  } else {
+                      $input.get(0).setCustomValidity('Unknown UPC');
+                  }
+              });
+        })
+        
+        $(document).on('change', '.count', function() {
+            updateSubTotal($(this).closest('.row'));
+        });
+        
+        $(document).on('click', '.remove-item', function() {
+            $(this).closest('.row').remove();
+        });
+        
+        function updateSubTotal($row){
+            const count = parseInt($row.find('.count').val());
+            const price = parseFloat($row.find('.price').val());
+            const total = count * price;
+            $row.find('.subtotal').val(total);
+            updateTotal();
+        }
+        
+        function updateTotal()
+        {
+            let total = 0;
+            $('#check-form').find('.subtotal').each(function() {
+              total += parseFloat($(this).val());
+            });
+            $('#total').text(total);
+        }
+        
+        
+        
+    </script>
+}
