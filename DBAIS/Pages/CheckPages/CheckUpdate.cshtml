@@ -74,10 +74,11 @@
             </div>
         </form>
 
-
+        <hr/>
         @{
             var header2 = "Add products to check";
         }
+        <partial name="_EditPageHeader" model="@header2" />
         <form method="post" asp-page-handler="CreateSale">
             <div class="form-group">
                 <div class="row">
@@ -96,7 +97,6 @@
                 </div>
             </div>
         </form>
-        <partial name="_EditPageHeader" model="@header2" />
         <table class="table">
             <thead>
                 <tr>
