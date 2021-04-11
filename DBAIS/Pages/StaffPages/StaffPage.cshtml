@@ -1,0 +1,100 @@
+﻿@page "/staff"
+@model DBAIS.Pages.StaffPages.StaffPageModel
+@{
+    ViewBag.Title = "Staff";
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+        @if (User.IsInRole("manager"))
+        {
+            <div class="col-1">
+                <a href="/staff/add">
+                    <button type="button" class="btn btn-success">Add +</button>
+                </a>
+            </div>
+        }
+        <div class="col-1">
+
+        </div>
+        <div>
+            <form method="get">
+                <div class="input-group">
+                    <input type="hidden" name="handler" value="BySurname" />
+                    <label class="form-check-label" asp-for="SelectedSurname" style="margin-top:6px;margin-right:6px;">
+                        Find by surname
+                    </label>
+                    <input type="text" class="form-control" name="surname" asp-for="SelectedSurname" placeholder="Surname" />
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" value="Get">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-1">
+
+        </div>
+        <div>
+            <form method="get">
+                <div class="input-group">
+                    <input type="hidden" name="handler" value="Sort" />
+                    <select class="custom-select" asp-for="SelectedSort" name="sort">
+                        <option value="None" selected="@( @Model.SelectedSort == Models.Sort.None)">None</option>
+                        <option value="Ascending" selected="@( @Model.SelectedSort == Models.Sort.Ascending)">Asc</option>
+                        <option value="Descending" selected="@( @Model.SelectedSort == Models.Sort.Descending)">Desc</option>
+                    </select>
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" value="Get">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+
+<h1>Staff</h1>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Surname</th>
+            <th scope="col">Name</th>
+            <th scope="col">Patronym</th>
+            <th scope="col">Telephone</th>
+            <th scope="col">Role</th>
+            <th scope="col">Salary</th>
+            <th scope="col">Address</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var empl in Model.Employee)
+        {
+            <tr>
+                <td>@empl.Id</td>
+                <td>@empl.Surname</td>
+                <td>@empl.Name</td>
+                <td>@empl.Patronymic</td>
+                <td>@empl.PhoneNumber</td>
+                <td>@empl.Role</td>
+                <td>@empl.Salary</td>
+                <td>@(empl.City != null ? empl.City +"," : "") @(empl.Street != null ? empl.Street + "," : "") @(empl.Zip != null ? empl.Zip : "")</td>
+                <td>
+                    @if (User.IsInRole("manager"))
+                    {
+                        <a asp-page="EmployeeUpdate" asp-route-id="@empl.Id" class=" text-primary link-primary">Update</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

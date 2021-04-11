@@ -15,6 +15,7 @@ namespace DBAIS.Pages.ClientCardPages
     {
 
         private readonly CustomerRepository _customerRepository;
+
         [BindProperty]
         public int? SelectedPercent { get; set; }
 

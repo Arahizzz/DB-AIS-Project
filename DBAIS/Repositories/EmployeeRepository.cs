@@ -150,7 +150,7 @@ namespace DBAIS.Repositories
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             var queryString = @"select id_employee, empl_surname, empl_name, empl_patronymic, role, salary, 
                                 date_of_birth, date_of_start, phone_number, city, street, zip_code
-                                from employee";
+                                from employee where role='cashier'";
             queryString += surname switch
             {
                 Sort.Ascending => " order by empl_surname asc",
@@ -189,8 +189,27 @@ namespace DBAIS.Repositories
 
             return GetEmployeeFromSql(reader);
         }
-        
-        
+
+        public async Task<Employee> GetEmployeeBySurname(string surname)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"select id_employee, empl_surname, empl_name, empl_patronymic, role, salary, 
+                                date_of_birth, date_of_start, phone_number, city, street, zip_code
+                                from employee
+                                where empl_surname = @surname";
+            await using var query = new NpgsqlCommand(queryString, conn);
+            query.Parameters.Add(new NpgsqlParameter<string>("surname", surname));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            if (!reader.Read())
+                throw new EntityNotFoundException<Employee, string>(surname);
+
+            return GetEmployeeFromSql(reader);
+        }
+
+
 
         private static Employee GetEmployeeFromSql(IDataRecord reader)
         {
