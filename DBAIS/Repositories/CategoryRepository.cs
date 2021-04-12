@@ -12,31 +12,6 @@ namespace DBAIS.Repositories
     {
         private readonly DbOptions _options;
 
-        private static readonly string VADYM_QUERY_2 = @"
-SELECT
-res.year,
-TO_CHAR(
-	TO_DATE (res.month::text, 'MM'), 'Month'
-) AS month,
-res.category_name,
-res.quantity as quantity
-FROM (
-	(
-	SELECT grouped_by_month.year, grouped_by_month.month, grouped_by_month.category_number, SUM(grouped_by_month.product_number) AS quantity
-	FROM (
-		SELECT EXTRACT(YEAR FROM print_date) AS year,EXTRACT(MONTH FROM print_date) AS month, p.category_number, s.product_number
-			FROM ""Check"" c
-			INNER JOIN sale s ON c.check_number=s.check_number
-            INNER JOIN store_product sp ON s.UPC = sp.UPC
-
-            INNER JOIN product p ON sp.id_product = p.id_product
-        ) grouped_by_month
-    GROUP BY grouped_by_month.year, grouped_by_month.month, grouped_by_month.category_number
-) grouped_by_category
-INNER JOIN category ca ON grouped_by_category.category_number = ca.category_number) res
-ORDER BY year, month, quantity DESC;
-            ";
-
         public CategoryRepository(IOptions<DbOptions> options)
         {
             _options = options.Value;
@@ -110,7 +85,7 @@ ORDER BY year, month, quantity DESC;
         public async Task<List<BestCategory>> GetBestCategories()
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
-            await using var query = new NpgsqlCommand(VADYM_QUERY_2, conn);
+            await using var query = new NpgsqlCommand(SQL.VadymQueries.VADYM_QUERY_2, conn);
             await conn.OpenAsync();
             await query.PrepareAsync();
 

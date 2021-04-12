@@ -321,5 +321,25 @@ namespace DBAIS.Repositories
 
             return list;
         }
+
+        public async Task<List<PromotionalCheck>> GetPromotionalChecks()
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var query = new NpgsqlCommand(SQL.VadymQueries.VADYM_QUERY_4, conn);
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            var list = new List<PromotionalCheck>();
+            while (reader.Read())
+            {
+                list.Add(new PromotionalCheck
+                {
+                    Number = reader.GetString(0)
+                });
+            }
+            return list;
+        }
     }
+
 }

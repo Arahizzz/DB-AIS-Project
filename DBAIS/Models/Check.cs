@@ -13,4 +13,9 @@ namespace DBAIS.Models
         public decimal Vat { get; set; }
         public IList<Sale> Sales { get; set; } = ArraySegment<Sale>.Empty;
     }
+
+    public class PromotionalCheck{
+        public string Number { get; set; } = null!;
+    }
+
 }

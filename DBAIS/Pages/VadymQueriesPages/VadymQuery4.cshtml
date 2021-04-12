@@ -1,0 +1,30 @@
+﻿@page "/vadym/query4"
+@model DBAIS.Pages.VadymQueriesPages.VadymQuery4Model
+@{
+    ViewBag.Title = "Vadym Query 4";
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+    </div>
+</nav>
+
+
+<h1>Vadym`s Query #4</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Check Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var check in Model.PromotionalChecks)
+        {
+            <tr>
+                <td>@check.Number</td>
+            </tr>
+        }
+    </tbody>
+</table>

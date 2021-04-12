@@ -12,9 +12,6 @@ namespace DBAIS.Pages.VadymQueriesPages
     public class VadymQuery2Model : PageModel
     {
 
-        [BindProperty]
-        public string SelectedCashier { get; set; }
-
         public List<BestCategory> BestCategories { get; set; }
 
         private readonly CategoryRepository _categoryRepository;
