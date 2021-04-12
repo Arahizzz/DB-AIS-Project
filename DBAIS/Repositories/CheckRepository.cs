@@ -340,6 +340,29 @@ namespace DBAIS.Repositories
             }
             return list;
         }
+
+        public async Task<int> GetProductCount(string upc, DateTime from, DateTime to)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var query = new NpgsqlCommand(@"
+            select sum(s.product_number)
+            from sale s inner join ""Check"" C on C.check_number = sale.check_number
+            where s.upc = @upc and C.print_date between @from and @to
+", conn);
+            query.Parameters.AddRange(new NpgsqlParameter[]
+            {
+                new NpgsqlParameter<string>("upc", upc),
+                new NpgsqlParameter<DateTime>("from", from),
+                new NpgsqlParameter<DateTime>("to", to)
+            });
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            reader.Read();
+
+            return reader.GetInt32(0);
+        }
     }
 
 }
