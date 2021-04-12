@@ -6,6 +6,7 @@ html, body {
 
 @page {
     margin: 20mm 10mm 20mm 20mm;
+    size: auto;
 }
 
 *, *:before, *:after {
