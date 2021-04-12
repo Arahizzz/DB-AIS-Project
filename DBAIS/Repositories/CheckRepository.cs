@@ -363,6 +363,33 @@ namespace DBAIS.Repositories
 
             return reader.GetValueOrDefault<int>(0);
         }
+
+        public async Task<decimal> GetChecksSum(string? cashier, DateTime from, DateTime to)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"
+            select sum(C.sum_total)
+            from ""Check"" C
+            where C.print_date between @from and @to
+";
+            if (cashier != null)
+                queryString += " and id_employee = @cashier";
+            await using var query = new NpgsqlCommand(queryString, conn);
+            query.Parameters.AddRange(new NpgsqlParameter[]
+            {
+                new NpgsqlParameter<DateTime>("from", from),
+                new NpgsqlParameter<DateTime>("to", to)
+            });
+            if (cashier != null)
+                query.Parameters.Add(new NpgsqlParameter<string>("cashier", cashier));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            reader.Read();
+
+            return reader.GetValueOrDefault<decimal>(0);
+        }
     }
 
 }
