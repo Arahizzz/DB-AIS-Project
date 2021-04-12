@@ -285,8 +285,6 @@ namespace DBAIS.Repositories
         private static List<Check> GetChecksFromSql(IDataReader reader)
         {
             var list = new List<Check>();
-            if (!reader.Read())
-                return list;
 
             Check? check = null;
             while (reader.Read())
@@ -389,6 +387,58 @@ namespace DBAIS.Repositories
             reader.Read();
 
             return reader.GetValueOrDefault<decimal>(0);
+        }
+
+        public async Task<List<Check>> GetTwinChecks(string check)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"
+            select * from ""Check"" c
+            where c.check_number <> @check
+                and not exists(
+                select *
+                    from sale s
+            where s.check_number = c.check_number
+            and s.upc not in (
+                select upc
+                from sale s1
+            where s1.check_number = @check
+                )
+                )
+            and not exists(
+                select *
+                from sale s
+                where s.check_number = @check
+            and s.upc not in (
+                select upc
+                from sale s1
+            where s1.check_number = c.check_number
+                )
+                );
+
+";
+            
+            await using var query = new NpgsqlCommand(queryString, conn);
+            query.Parameters.Add(new NpgsqlParameter<string>("check", check));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            var list = new List<Check>();
+            while (reader.Read())
+            {
+                list.Add(new Check
+                {
+                    Number = reader.GetString(0),
+                    EmployeeId = reader.GetString(1),
+                    CardNum = reader.GetValueOrDefault<string>(2),
+                    Date = reader.GetDateTime(3),
+                    Total = reader.GetDecimal(4),
+                    Vat = reader.GetDecimal(5)
+                });
+            }
+
+            return list;
         }
     }
 

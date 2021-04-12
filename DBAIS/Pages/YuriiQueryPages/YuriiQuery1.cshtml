@@ -1,0 +1,73 @@
+﻿@page "/yurii/query1"
+@model DBAIS.Pages.YuriiQueryPages.YuriiQuery1
+
+
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton"/>
+    </div>
+</nav>
+
+
+<h1>Yurii`s Query #1</h1>
+<form method="get">
+    <div class="input-group">
+        <label class="form-check-label" asp-for="CustomerCard" style="margin-top:6px;margin-right:6px;">
+            Enter card number:
+        </label>
+        <input asp-for="CustomerCard"/>
+        <div class="input-group-append">
+            <input class="btn btn-outline-secondary" type="submit" value="Get"/>
+        </div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Check Number</th>
+        <th scope="col">Print Date</th>
+        <th scope="col">Total Sum</th>
+        <th scope="col">Products</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var info in Model.History)
+    {
+        <tr>
+            <td>@info.CheckNumber</td>
+            <td>@info.PrintDate</td>
+            <td>@info.TotalSum</td>
+            <td>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Product ID</th>
+                        <th scope="col">UPC</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Count</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var product in info.Products)
+                    {
+                        <tr>
+                            <td>@product.Id</td>
+                            <td>@product.Upc</td>
+                            <td>@product.Name</td>
+                            <td>@product.Price</td>
+                            <td>@product.Count</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

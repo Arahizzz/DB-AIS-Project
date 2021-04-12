@@ -1,0 +1,51 @@
+﻿@page "/yurii/query4"
+@model DBAIS.Pages.YuriiQueryPages.YuriiQuery4
+
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton"/>
+    </div>
+</nav>
+
+
+<h1>Yurii`s Query #4</h1>
+<form method="get">
+    <div class="input-group">
+        <label class="form-check-label" asp-for="CheckNum" style="margin-top:6px;margin-right:6px;">
+            Enter check number: 
+        </label>
+        <input asp-for="CheckNum" />
+        <div class="input-group-append">
+            <input class="btn btn-outline-secondary" type="submit" value="Get"/>
+        </div>
+    </div>
+</form>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Check Number</th>
+        <th scope="col">Employee ID</th>
+        <th scope="col">Customer Card</th>
+        <th scope="col">Print Date</th>
+        <th scope="col">Total Sum</th>
+        <th scope="col">Vat</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var info in Model.Checks)
+    {
+        <tr>
+            <td>@info.Number</td>
+            <td>@info.EmployeeId</td>
+            <td>@info.CardNum</td>
+            <td>@info.Date</td>
+            <td>@info.Total</td>
+            <td>@info.Vat</td>
+        </tr>
+    }
+    </tbody>
+</table>

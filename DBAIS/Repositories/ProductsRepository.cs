@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DBAIS.Models;
+using DBAIS.Models.DTOs;
 using DBAIS.Options;
 using Microsoft.Extensions.Options;
 using Npgsql;
@@ -110,6 +111,35 @@ namespace DBAIS.Repositories
                 list.Add(Product.FromSql(reader));
             }
             
+            return list;
+        }
+
+        public async Task<List<ProductRevenueInfo>> GetMostProfitableProducts()
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var query = new NpgsqlCommand(@"
+        select p.id_product, p.product_name, sum(s.product_number * s.selling_price) as TotalProfit
+from product p
+         inner join store_product sp on p.id_product = sp.id_product
+         inner join sale s on sp.upc = s.upc
+group by p.id_product, p.product_name
+order by TotalProfit desc;
+", conn);
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+            await using var reader = await query.ExecuteReaderAsync();
+
+            var list = new List<ProductRevenueInfo>();
+            while (reader.Read())
+            {
+                list.Add(new ProductRevenueInfo
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Sum = reader.GetDecimal(2)
+                });
+            }
+
             return list;
         }
     }
