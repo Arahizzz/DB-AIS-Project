@@ -43,7 +43,17 @@ namespace DBAIS.Pages.ClientCardPages
         public async Task OnGetBySurname([FromQuery] string? surname)
         {
             SelectedClient = surname;
-            Customers = await _customerRepository.GetCards(null);
+            var cards = await _customerRepository.GetCards(null);
+            if (surname != null)
+            {
+                Customers = new List<Card>();
+                var found = cards.Find(x => x.Surname.Equals(surname));
+                if(found != null)Customers.Add(found);
+            }
+            else
+            {
+                Customers = cards;
+            }
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(string id)
