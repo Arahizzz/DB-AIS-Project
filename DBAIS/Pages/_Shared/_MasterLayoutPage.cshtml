@@ -36,72 +36,75 @@
             <li class="@(ViewBag.Title == "Home" ? "active" : "")">
                 <a href="/"><i class="fa fa-fw fa-home"></i> Home</a>
             </li>
-            <li class="@(ViewBag.Title == "Products" ? "active" : "")">
-                <a href="/products"><i class="fa fa-shopping-basket" aria-hidden="true"></i> Products</a>
-            </li>
-            <li class="@(ViewBag.Title == "Category" ? "active" : "")">
-                <a href="/category"><i class="fa fa-tags"></i> Category</a>
-            </li>
-            <li class="@(ViewBag.Title == "Storage" ? "active" : "")">
-                <a href="/storeproducts"><i class="fa fa-truck" aria-hidden="true"></i> Storage</a>
-            </li>
-            <li class="@(ViewBag.Title == "Checks" ? "active" : "")">
-                <a href="/checks"><i class="fa fa-list-alt" aria-hidden="true"></i> Checks</a>
-            </li>
-            <li class="@(ViewBag.Title == "Staff" ? "active" : "")">
-                <a href="/staff"><i class="fa fa-fw fa-users"></i> Staff</a>
-            </li>
-            <li class="@(ViewBag.Title == "Customers" ? "active" : "")">
-                <a href="/customers"><i class="fa fa-credit-card" aria-hidden="true"></i> Client cards</a>
-            </li>
-            <li>
-                <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-search" aria-hidden="true"></i>Check Finder</a>
-                <ul class="collapse list-unstyled" id="pageSubmenu1">
-                    <li>
-                        <a href="/checkfinder/findproducts">Info About Products</a>
-                    </li>
-                    <li>
-                        <a href="/checkfinder/findtotalsum">Info About Total Sum</a>
-                    </li>
-                    <li>
-                        <a href="/checkfinder/findtotalcount">Info About Total Count</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Vadym`s queries</a>
-                <ul class="collapse list-unstyled" id="pageSubmenu2">
-                    <li>
-                        <a href="/vadym/query1">Query1</a>
-                    </li>
-                    <li>
-                        <a href="/vadym/query2">Query2</a>
-                    </li>
-                    <li>
-                        <a href="/vadym/query3">Query3</a>
-                    </li>
-                    <li>
-                        <a href="/vadym/query4">Query4</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yurii`s queries</a>
-                <ul class="collapse list-unstyled" id="pageSubmenu3">
-                    <li>
-                        <a href="/yurii/query1">Query1</a>
-                    </li>
-                    <li>
-                        <a href="/yurii/query2">Query2</a>
-                    </li>
-                    <li>
-                        <a href="/yurii/query3">Query3</a>
-                    </li>
-                    <li>
-                        <a href="/yurii/query4">Query4</a>
-                    </li>
-                </ul>
-            </li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li class="@(ViewBag.Title == "Products" ? "active" : "")">
+                    <a href="/products"><i class="fa fa-shopping-basket" aria-hidden="true"></i> Products</a>
+                </li>
+                <li class="@(ViewBag.Title == "Category" ? "active" : "")">
+                    <a href="/category"><i class="fa fa-tags"></i> Category</a>
+                </li>
+                <li class="@(ViewBag.Title == "Storage" ? "active" : "")">
+                    <a href="/storeproducts"><i class="fa fa-truck" aria-hidden="true"></i> Storage</a>
+                </li>
+                <li class="@(ViewBag.Title == "Checks" ? "active" : "")">
+                    <a href="/checks"><i class="fa fa-list-alt" aria-hidden="true"></i> Checks</a>
+                </li>
+                <li class="@(ViewBag.Title == "Staff" ? "active" : "")">
+                    <a href="/staff"><i class="fa fa-fw fa-users"></i> Staff</a>
+                </li>
+                <li class="@(ViewBag.Title == "Customers" ? "active" : "")">
+                    <a href="/customers"><i class="fa fa-credit-card" aria-hidden="true"></i> Client cards</a>
+                </li>
+                <li>
+                    <a href="#pageSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><i class="fa fa-search" aria-hidden="true"></i>Check Finder</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu1">
+                        <li>
+                            <a href="/checkfinder/findproducts">Info About Products</a>
+                        </li>
+                        <li>
+                            <a href="/checkfinder/findtotalsum">Info About Total Sum</a>
+                        </li>
+                        <li>
+                            <a href="/checkfinder/findtotalcount">Info About Total Count</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Vadym`s queries</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu2">
+                        <li>
+                            <a href="/vadym/query1">Query1</a>
+                        </li>
+                        <li>
+                            <a href="/vadym/query2">Query2</a>
+                        </li>
+                        <li>
+                            <a href="/vadym/query3">Query3</a>
+                        </li>
+                        <li>
+                            <a href="/vadym/query4">Query4</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Yurii`s queries</a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu3">
+                        <li>
+                            <a href="/yurii/query1">Query1</a>
+                        </li>
+                        <li>
+                            <a href="/yurii/query2">Query2</a>
+                        </li>
+                        <li>
+                            <a href="/yurii/query3">Query3</a>
+                        </li>
+                        <li>
+                            <a href="/yurii/query4">Query4</a>
+                        </li>
+                    </ul>
+                </li>
+            }
         </ul>
     </nav>
 
