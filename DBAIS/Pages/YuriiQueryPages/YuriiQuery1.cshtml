@@ -14,6 +14,7 @@
 
 
 <h1>Yurii`s Query #1</h1>
+<h4>Історія покупок товарів з використанням заданої картки лояльності</h4>
 <form method="get">
     <div class="input-group">
         <label class="form-check-label" asp-for="CustomerCard" style="margin-top:6px;margin-right:6px;">
@@ -40,7 +41,7 @@
         <tr>
             <td>@info.CheckNumber</td>
             <td>@info.PrintDate</td>
-            <td>@info.TotalSum</td>
+            <td>@info.TotalSum.ToString("F")</td>
             <td>
                 <table class="table">
                     <thead>

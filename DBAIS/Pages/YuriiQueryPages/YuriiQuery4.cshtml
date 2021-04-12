@@ -13,6 +13,7 @@
 
 
 <h1>Yurii`s Query #4</h1>
+<h4>Усі чеки, в яких присутні ті й тільки ті магазинні товари (по UPC), що і в заданому.</h4>
 <form method="get">
     <div class="input-group">
         <label class="form-check-label" asp-for="CheckNum" style="margin-top:6px;margin-right:6px;">
@@ -43,8 +44,8 @@
             <td>@info.EmployeeId</td>
             <td>@info.CardNum</td>
             <td>@info.Date</td>
-            <td>@info.Total</td>
-            <td>@info.Vat</td>
+            <td>@info.Total.ToString("F")</td>
+            <td>@info.Vat.ToString("F")</td>
         </tr>
     }
     </tbody>
