@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Options;
@@ -10,6 +11,31 @@ namespace DBAIS.Repositories
     public class CategoryRepository
     {
         private readonly DbOptions _options;
+
+        private static readonly string VADYM_QUERY_2 = @"
+SELECT
+res.year,
+TO_CHAR(
+	TO_DATE (res.month::text, 'MM'), 'Month'
+) AS month,
+res.category_name,
+res.quantity as quantity
+FROM (
+	(
+	SELECT grouped_by_month.year, grouped_by_month.month, grouped_by_month.category_number, SUM(grouped_by_month.product_number) AS quantity
+	FROM (
+		SELECT EXTRACT(YEAR FROM print_date) AS year,EXTRACT(MONTH FROM print_date) AS month, p.category_number, s.product_number
+			FROM ""Check"" c
+			INNER JOIN sale s ON c.check_number=s.check_number
+            INNER JOIN store_product sp ON s.UPC = sp.UPC
+
+            INNER JOIN product p ON sp.id_product = p.id_product
+        ) grouped_by_month
+    GROUP BY grouped_by_month.year, grouped_by_month.month, grouped_by_month.category_number
+) grouped_by_category
+INNER JOIN category ca ON grouped_by_category.category_number = ca.category_number) res
+ORDER BY year, month, quantity DESC;
+            ";
 
         public CategoryRepository(IOptions<DbOptions> options)
         {
@@ -80,5 +106,28 @@ namespace DBAIS.Repositories
             }
             return list;
         }
+
+        public async Task<List<BestCategory>> GetBestCategories()
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var query = new NpgsqlCommand(VADYM_QUERY_2, conn);
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            var list = new List<BestCategory>();
+            while (reader.Read())
+            {
+                list.Add(new BestCategory
+                {
+                    Year = Convert.ToInt32(reader.GetDouble(0)),
+                    Month = reader.GetString(1),
+                    Name = reader.GetString(2),
+                    Quantity = reader.GetInt32(3),
+                });
+            }
+            return list;
+        }
+
     }
 }
