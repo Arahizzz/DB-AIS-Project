@@ -16,24 +16,16 @@ namespace DBAIS.Pages.CheckPages
     [Authorize(Roles = "cashier, manager")]
     public class CheckAddModel : PageModel
     {
-
         // Form data
-        [BindProperty]
-        [MaxLength(13)]
-        public string? CardNumber { get; set; }
+        [BindProperty] [MaxLength(13)] public string? CardNumber { get; set; }
 
-        [BindProperty]
-        [MaxLength(10)]
-        public string CheckNumber { get; set; }
+        [BindProperty] [MaxLength(10)] public string CheckNumber { get; set; }
 
         public string IdEmployee { get; set; }
 
-        [BindProperty]
-        public DateTime PrintDate { get; set; } = DateTime.Now;
+        [BindProperty] public DateTime PrintDate { get; set; } = DateTime.Now;
 
-        [BindProperty]
-        [Range(0, 100)]
-        public int Vat { get; set; }
+        [BindProperty] [Range(0, 100)] public int Vat { get; set; } = 20;
 
         [BindProperty] public IList<Sale> Sales { get; set; } = ArraySegment<Sale>.Empty;
 
@@ -49,7 +41,9 @@ namespace DBAIS.Pages.CheckPages
 
         public EmployeeUser? UserInfo { get; set; }
 
-        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository, StoreProductRepository storeProducts, UserManager<EmployeeUser> userManager)
+        public CheckAddModel(CheckRepository checkRepository, EmployeeRepository employeeRepository,
+            CustomerRepository customerRepository, StoreProductRepository storeProducts,
+            UserManager<EmployeeUser> userManager)
         {
             _checkRepository = checkRepository;
             _employeeRepository = employeeRepository;
@@ -62,11 +56,11 @@ namespace DBAIS.Pages.CheckPages
         {
             var employees = await _employeeRepository.GetCashiers(Sort.None);
             EmployeeOptions = employees.Select(e =>
-                                  new SelectListItem
-                                  {
-                                      Value = e.Id,
-                                      Text = e.Id
-                                  }).ToList();
+                new SelectListItem
+                {
+                    Value = e.Id,
+                    Text = e.Id
+                }).ToList();
             var cards = await _customerRepository.GetCards(null);
             CardsOptions = new List<SelectListItem>();
             CardsOptions.Add(new SelectListItem
@@ -75,11 +69,11 @@ namespace DBAIS.Pages.CheckPages
                 Text = "-"
             });
             CardsOptions.AddRange(cards.Select(c =>
-                                  new SelectListItem
-                                  {
-                                      Value = c.Number,
-                                      Text = c.Number
-                                  }).ToList());
+                new SelectListItem
+                {
+                    Value = c.Number,
+                    Text = c.Number
+                }).ToList());
             if (User.IsInRole("cashier") || User.IsInRole("manager"))
             {
                 UserInfo = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -115,14 +109,16 @@ namespace DBAIS.Pages.CheckPages
             }
             else
             {
+                var sum = Sales.Sum(s => s.Price * s.Count);
+                var vat = sum * Vat / 100m;
                 var newCheck = new Models.Check
                 {
                     Number = CheckNumber,
                     CardNum = CardNumber != "" ? CardNumber : null,
                     Date = PrintDate,
                     EmployeeId = IdEmployee,
-                    Total = Sales.Sum(s => s.Price * s.Count)*1.2m,
-                    Vat = Vat,
+                    Total = sum + vat,
+                    Vat = vat,
                     Sales = Sales
                 };
                 await _checkRepository.AddCheck(newCheck);

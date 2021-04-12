@@ -106,9 +106,11 @@ namespace DBAIS.Repositories
             foreach (var sale in check.Sales)
             {
                 await using var salesCommand = new NpgsqlCommand(@"
-                update sale
-                set upc = @upc, product_number = @count, selling_price = @price
-                where check_number = @check
+                insert into sale (upc, check_number, product_number, selling_price)
+                VALUES (@upc, @check, @count, @price)
+                ON CONFLICT (upc, check_number)
+                DO UPDATE SET product_number = excluded.product_number,
+                              selling_price = excluded.selling_price;
 ", conn)
                 {
                     Transaction = transaction
