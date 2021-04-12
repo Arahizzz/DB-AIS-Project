@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using DBAIS.Models;
@@ -162,19 +163,19 @@ namespace DBAIS.Repositories
 
             command.Parameters.AddRange(new NpgsqlParameter[]
             {
-                new ("id", employee.Id),
-                new ("password", employee.Password),
-                new ("surname", employee.Surname),
-                new ("name", employee.Name),
-                new ("patronymic", employee.Patronymic),
-                new ("role", employee.Role),
-                new ("salary", employee.Salary),
-                new ("date_of_birth", employee.DateOfBirth),
-                new ("date_of_start", employee.DateOfStart),
-                new ("phone_number", employee.PhoneNumber),
-                new ("city", employee.City),
-                new ("street", employee.Street),
-                new ("zip", employee.Zip)
+                new NpgsqlParameter<string>("id", employee.Id),
+                new NpgsqlParameter<string>("password", employee.Password),
+                new NpgsqlParameter<string>("surname", employee.Surname),
+                new NpgsqlParameter<string>("name", employee.Name),
+                new NpgsqlParameter<string>("patronymic", employee.Patronymic),
+                new NpgsqlParameter<string>("role", employee.Role),
+                new NpgsqlParameter<decimal>("salary", employee.Salary),
+                new NpgsqlParameter<DateTime>("date_of_birth", employee.DateOfBirth),
+                new NpgsqlParameter<DateTime>("date_of_start", employee.DateOfStart),
+                new NpgsqlParameter<string>("phone_number", employee.PhoneNumber),
+                new NpgsqlParameter<string>("city", employee.City),
+                new NpgsqlParameter<string>("street", employee.Street),
+                new NpgsqlParameter<string>("zip", employee.Zip)
             });
 
             await conn.OpenAsync();
