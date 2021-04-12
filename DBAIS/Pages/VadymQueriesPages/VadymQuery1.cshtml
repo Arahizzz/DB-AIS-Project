@@ -1,0 +1,70 @@
+﻿@page "/vadym/query1"
+@model DBAIS.Pages.VadymQueriesPages.VadymQuery1Model
+
+@{
+    ViewBag.Title = "Vadym Query 1";
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+        <div class="col-1">
+
+        </div>
+        <div>
+            <form method="get">
+                <div class="input-group">
+                    <input type="hidden" name="handler" value="ByCashier" />
+                    <label class="form-check-label" asp-for="SelectedCashier" style="margin-top:6px;margin-right:6px;">
+                        Find by id
+                    </label>
+                    <input class="form-control" name="cashierId" asp-for="SelectedCashier" placeholder="Cashier id" />
+                    <div class="input-group-append">
+                        <input class="btn btn-outline-secondary" type="submit" value="Get">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</nav>
+
+
+<h1>Vadym`s Query #1</h1>
+@if (ModelState.ErrorCount > 0)
+{
+    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
+        <div class="validation" asp-validation-summary="All"></div>
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Cashier Surname</th>
+            <th scope="col">Print Date</th>
+            <th scope="col">Check Number</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Count</th>
+            <th scope="col">Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var check in Model.CashierHistory)
+        {
+
+            @foreach (var product in check.Products)
+            {
+                <tr>
+                    <td>@check.CashierSurename</td>
+                    <td>@check.PrintDate</td>
+                    <td>@check.CheckNumber</td>
+                    <td>@product.ProductName</td>
+                    <td>@product.Count</td>
+                    <td>@product.TotalPrice</td>
+                </tr>
+             }
+                
+            }
+        </tbody>
+</table>
