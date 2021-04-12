@@ -442,6 +442,46 @@ namespace DBAIS.Repositories
 
             return list;
         }
+        
+        public async Task<List<PurchaseInfo.ProductInfo>> GetCheckProducts(string checkNum)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var query = new NpgsqlCommand(
+                @"SELECT 
+                           sp.upc,
+                           p.id_product,
+                           p.product_name,
+                           s.product_number,
+                           s.selling_price
+                    FROM ""Check"" c
+                    inner join sale s on c.check_number = s.check_number
+                    inner join store_product sp on s.upc = sp.upc
+                    inner join product p on sp.id_product = p.id_product
+                    where c.check_number = @checkNum
+                ",
+                conn
+            );
+            query.Parameters.Add(new NpgsqlParameter<string>("checkNum", checkNum));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+
+            var list = new List<PurchaseInfo.ProductInfo>();
+            while (reader.Read())
+            {
+                list.Add(new PurchaseInfo.ProductInfo
+                {
+                    Upc = reader.GetString(0),
+                    Id = reader.GetInt32(1),
+                    Name = reader.GetString(2),
+                    Count = reader.GetInt32(3),
+                    Price = reader.GetDecimal(4)
+                });
+            }
+
+            return list;
+        }
     }
 
 }

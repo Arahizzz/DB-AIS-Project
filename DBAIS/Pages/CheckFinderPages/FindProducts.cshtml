@@ -1,23 +1,51 @@
 ﻿@page "/checkfinder/findproducts"
 @model DBAIS.Pages.CheckFinderPages.FindProductsModel
+
 @{
-    ViewBag.Title = "Find Products";
+    ViewBag.Title = "Check producrs";
     Layout = "_Shared/_MasterLayoutPage";
 }
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-        <partial name="_ToggleSidebarButton" />
-        <div class="col">
-
-        </div>
+        <partial name="_ToggleSidebarButton"/>
     </div>
 </nav>
 
-<h1>Checks</h1>
-@if (ModelState.ErrorCount > 0)
-{
-    <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
-        <div class="validation" asp-validation-summary="All"></div>
+
+<h1>Check products</h1>
+<form method="get">
+    <div class="input-group">
+        <label class="form-check-label" asp-for="SelectedCheck" style="margin-top:6px;margin-right:6px;">
+            Enter check number:
+        </label>
+        <input asp-for="SelectedCheck"/>
+        <div class="input-group-append">
+            <input class="btn btn-outline-secondary" type="submit" value="Get"/>
+        </div>
     </div>
-}
+</form>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Product ID</th>
+        <th scope="col">UPC</th>
+        <th scope="col">Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var product in Model.Products)
+    {
+        <tr>
+            <td>@product.Id</td>
+            <td>@product.Upc</td>
+            <td>@product.Name</td>
+            <td>@product.Price</td>
+            <td>@product.Count</td>
+        </tr>
+    }
+    </tbody>
+</table>
