@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net;
 using System.Threading.Tasks;
 using DBAIS.Models;
 using DBAIS.Models.DTOs;
 using DBAIS.Options;
+using DBAIS.Repositories.Utils;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -194,6 +196,40 @@ namespace DBAIS.Repositories
                 throw new EntityNotFoundException<Employee, string>(surname);
 
             return GetEmployeeFromSql(reader);
+        }
+
+        public async Task<List<CashierInteractionInfo>> GetFavorites()
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            var queryString = @"
+    select distinct on (cc.card_number) cc.card_number, e.id_employee, e.empl_name, e.empl_surname, count(ch) as Times
+from customer_card cc
+         left join
+         (""Check"" ch inner join employee e on e.id_employee = ch.id_employee)
+            on cc.card_number = ch.card_number
+            group by cc.card_number, e.id_employee, e.empl_name, e.empl_surname, e.date_of_start
+                order by cc.card_number, Times desc, e.date_of_start
+";
+            await using var query = new NpgsqlCommand(queryString, conn);
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+
+            var list = new List<CashierInteractionInfo>();
+            while (reader.Read())
+            {
+                list.Add(new CashierInteractionInfo
+                {
+                    Customer = reader.GetString(0),
+                    EmployeeId = reader.GetValueOrDefault<string?>(1),
+                    EmplName = reader.GetValueOrDefault<string?>(2),
+                    EmplSurname = reader.GetValueOrDefault<string?>(3),
+                    Count = reader.GetInt32(4)
+                });
+            }
+
+            return list;
         }
 
 

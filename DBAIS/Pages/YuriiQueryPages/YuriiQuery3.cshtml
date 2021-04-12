@@ -1,0 +1,36 @@
+﻿@page "/yurii/query3"
+@model DBAIS.Pages.YuriiQueryPages.YuriiQuery3
+
+@{
+    Layout = "_Shared/_MasterLayoutPage";
+}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <partial name="_ToggleSidebarButton" />
+    </div>
+</nav>
+
+
+<h1>Yurii`s Query #3</h1>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Customer Card</th>
+        <th scope="col">Employee Name</th>
+        <th scope="col">Employee Surname</th>
+        <th scope="col">Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var info in Model.Favorites)
+    {
+        <tr>
+            <td>@info.Customer</td>
+            <td>@info.EmplName</td>
+            <td>@info.EmplSurname</td>
+            <td>@info.Count</td>
+        </tr>
+    }
+    </tbody>
+</table>
