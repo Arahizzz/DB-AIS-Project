@@ -11,11 +11,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace DBAIS.Pages.CheckFinderPages
 {
     [Authorize(Roles = "manager")]
-    public class FindTotalSumModel : PageModel
+    public class FindTotalCountModel : PageModel
     {
         //ByCashier
         [BindProperty]
-        public string? CashierId { get; set; }
+        public string ProductUpc { get; set; }
 
         [BindProperty]
         [DataType(DataType.Date)]
@@ -26,26 +26,30 @@ namespace DBAIS.Pages.CheckFinderPages
         public DateTime DateTo { get; set; } = DateTime.Now;
 
         //Results
-        public decimal? PeriodCashiersSum { get; set; }
+        public Int64? TotalCountPeriod { get; set; }
 
+        private readonly StoreProductRepository _storeProductRepository;
         private readonly CheckRepository _checkRepository;
-        private readonly EmployeeRepository _employeeRepository;
 
-        public FindTotalSumModel(CheckRepository checkRepository, EmployeeRepository employeeRepository)
+        public FindTotalCountModel(CheckRepository checkRepository, StoreProductRepository storeProductRepository)
         {
+            _storeProductRepository = storeProductRepository;
             _checkRepository = checkRepository;
-            _employeeRepository = employeeRepository;
         }
         public void OnGet()
         {
 
         }
-        public async Task OnGetPeriodCashiersSum([FromQuery] string? cashierId, [FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
+        public async Task OnGetPeriodTotalCount([FromQuery] string upc, [FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
         {
-            CashierId = cashierId;
+            ProductUpc = upc;
             DateFrom = dateFrom;
             DateTo = dateTo;
-            PeriodCashiersSum = await _checkRepository.GetChecksSum(cashierId, dateFrom, dateTo);
+            if (ModelState.IsValid)
+            {
+                TotalCountPeriod = await _checkRepository.GetProductCount(upc, dateFrom, dateTo);
+            }
+            else TotalCountPeriod = null;
         }
     }
 }

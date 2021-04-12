@@ -4,12 +4,14 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using DBAIS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DBAIS.Pages.Auth
 {
+    [Authorize(Roles = "manager")]
     public class EmployerAddModel : PageModel
     {
         //

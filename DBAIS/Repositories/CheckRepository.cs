@@ -341,12 +341,12 @@ namespace DBAIS.Repositories
             return list;
         }
 
-        public async Task<int> GetProductCount(string upc, DateTime from, DateTime to)
+        public async Task<Int64> GetProductCount(string upc, DateTime from, DateTime to)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
             await using var query = new NpgsqlCommand(@"
             select sum(s.product_number)
-            from sale s inner join ""Check"" C on C.check_number = sale.check_number
+            from sale s inner join ""Check"" C on C.check_number = s.check_number
             where s.upc = @upc and C.print_date between @from and @to
 ", conn);
             query.Parameters.AddRange(new NpgsqlParameter[]
@@ -361,7 +361,7 @@ namespace DBAIS.Repositories
             await using var reader = await query.ExecuteReaderAsync();
             reader.Read();
 
-            return reader.GetValueOrDefault<int>(0);
+            return reader.GetValueOrDefault<Int64>(0);
         }
 
         public async Task<decimal> GetChecksSum(string? cashier, DateTime from, DateTime to)

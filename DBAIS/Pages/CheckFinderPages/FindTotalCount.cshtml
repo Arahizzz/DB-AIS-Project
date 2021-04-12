@@ -1,7 +1,7 @@
-﻿@page "/checkfinder/findtotalsum"
-@model DBAIS.Pages.CheckFinderPages.FindTotalSumModel
+﻿@page "/checkfinder/findtotalcount"
+@model DBAIS.Pages.CheckFinderPages.FindTotalCountModel
 @{
-    ViewBag.Title = "Find Products";
+    ViewBag.Title = "Find Total Count";
     Layout = "_Shared/_MasterLayoutPage";
 }
 
@@ -14,7 +14,7 @@
     </div>
 </nav>
 
-<h1>Total sum</h1>
+<h1>Total count</h1>
 @if (ModelState.ErrorCount > 0)
 {
     <div id="book-alert" class="alert alert-danger" role="alert" style="{margin:10px;}">
@@ -24,17 +24,17 @@
 
 <hr />
 @{
-    var header1 = "Find how much a cashier(or all cashiers) sold in a period";
+    var header1 = "Find how many units of a product have been sold in a period";
 }
 <partial name="_EditPageHeader" model="@header1" />
 <div>
     <form method="get">
         <div class="input-group">
-            <input type="hidden" name="handler" value="PeriodCashiersSum" />
-            <label class="form-check-label" asp-for="CashierId" style="margin-top:6px;margin-right:6px;">
-                Cashier Id
+            <input type="hidden" name="handler" value="PeriodTotalCount" />
+            <label class="form-check-label" asp-for="ProductUpc" style="margin-top:6px;margin-right:6px;">
+                Product UPC
             </label>
-            <input class="form-control" asp-for="CashierId" name="cashierId" value="@(@Model.CashierId)" placeholder="All cashiers">
+            <input class="form-control" asp-for="ProductUpc" name="upc" value="@(@Model.ProductUpc)" placeholder="UPC">
             <div class="col-1">
 
             </div>
@@ -55,13 +55,11 @@
         </div>
     </form>
 </div>
-@if (Model.PeriodCashiersSum != null)
+@if (Model.TotalCountPeriod != null)
 {
-    <br/>
+    <br />
     <div>
-        <h3>Total sum by @(Model.CashierId != null ? " cashier " + Model.CashierId : "all cashiers ") in period from @(Model.DateFrom.Date.ToString("yyyy-MM-dd")) to @(Model.DateTo.Date.ToString("yyyy-MM-dd")) = @Model.PeriodCashiersSum</h3>
+        <h3>There have been totally sold @(Model.TotalCountPeriod) units of product @(Model.ProductUpc) in period from @(Model.DateFrom.Date.ToString("yyyy-MM-dd")) to @(Model.DateTo.Date.ToString("yyyy-MM-dd"))</h3>
     </div>
 }
 <hr />
-
-
