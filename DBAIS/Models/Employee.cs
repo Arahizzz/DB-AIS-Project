@@ -23,4 +23,12 @@ namespace DBAIS.Models
         public string Password { get; set; } = null!;
         public string UserName { get => PhoneNumber; set => PhoneNumber = value; }
     }
+
+    public class EmployeeOfTheMonth
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Surname { get; set; } = string.Empty;
+        public string Patronymic { get; set; } = string.Empty;
+        public int Sold { get; set; }
+    }
 }

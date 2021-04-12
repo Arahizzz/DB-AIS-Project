@@ -12,19 +12,6 @@ namespace DBAIS.Repositories
 {
     public class EmployeeRepository
     {
-        private const string SELECT_EMPLOYEE_HISTORY = @"SELECT
-                e.empl_surname,
-                c.print_date,
-                c.check_number,
-                p.product_name,
-                s.product_number,
-                s.selling_price * s.product_number AS price_sum
-               FROM employee E
-               INNER JOIN ""Check"" c ON e.id_employee = c.id_employee
-               INNER JOIN sale s ON c.check_number = s.check_number
-               INNER JOIN store_product sp ON s.UPC = sp.UPC
-               INNER JOIN product p ON sp.id_product = p.id_product
-               WHERE e.id_employee = @id AND e.role = 'cashier'; ";
 
         private readonly DbOptions _options;
 
@@ -36,7 +23,7 @@ namespace DBAIS.Repositories
         public async Task<List<SellingInfo>> GetEmployeeChecks(string employeeId)
         {
             await using var conn = new NpgsqlConnection(_options.ConnectionString);
-            await using var query = new NpgsqlCommand(SELECT_EMPLOYEE_HISTORY, conn);
+            await using var query = new NpgsqlCommand(SQL.VadymQueries.VADYM_QUERY_1, conn);
             query.Parameters.Add(new NpgsqlParameter<string>("id", employeeId));
             await conn.OpenAsync();
             await query.PrepareAsync();
@@ -230,6 +217,27 @@ namespace DBAIS.Repositories
             };
         }
         
+
+        public async Task<EmployeeOfTheMonth> GetEmployeeOfTheMonth(int month)
+        {
+            await using var conn = new NpgsqlConnection(_options.ConnectionString);
+            await using var query = new NpgsqlCommand(SQL.VadymQueries.VADYM_QUERY_3, conn);
+            query.Parameters.Add(new NpgsqlParameter<int>("month", month));
+            await conn.OpenAsync();
+            await query.PrepareAsync();
+
+            await using var reader = await query.ExecuteReaderAsync();
+            if (reader.Read())
+            {
+                return new EmployeeOfTheMonth
+                {
+                    Surname = reader.GetString(0),
+                    Name = reader.GetString(1),
+                    Patronymic = reader.GetString(2),
+                    Sold = reader.GetInt32(3)
+                };
+            } else return null;
+        }
        
     }
 }
