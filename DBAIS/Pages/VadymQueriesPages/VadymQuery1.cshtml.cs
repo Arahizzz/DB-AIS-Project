@@ -29,7 +29,7 @@ namespace DBAIS.Pages.VadymQueriesPages
             CashierHistory = new List<SellingInfo>();
         }
 
-        public async void OnGetByCashier([FromQuery] string cashierId)
+        public async Task OnGetByCashier([FromQuery] string cashierId)
         {
             SelectedCashier = cashierId;
             CashierHistory = new List<SellingInfo>();
