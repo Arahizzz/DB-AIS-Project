@@ -31,17 +31,6 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-3">
-                        <label asp-for="CheckNumber">Check number</label>
-                        <input asp-for="CheckNumber" class="form-control" placeholder="Check number">
-                    </div>
-                    <div class="col-3">
-                        <label asp-for="IdEmployee">Employee ID</label>
-                        <select class="custom-select" asp-for="IdEmployee" asp-items="Model.EmployeeOptions"></select>
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-3">
                         <p>Total: @Model.Total</p>
                     </div>
                     <div class="col-3">
@@ -82,8 +71,9 @@
         <form method="post" asp-page-handler="CreateSale">
             <div class="form-group">
                 <div class="row">
+                    <input name="id" hidden value="@Model.CurrentCheck.Number" />
                     <div class="col-2">
-                        <input type="text" name="saleUpc" class="form-control" placeholder="UPC">
+                        <input type="text" name="upc" class="form-control" placeholder="UPC">
                     </div>
                     <div class="col-2">
                         <input type="number" name="count" class="form-control" placeholder="Count">
@@ -113,8 +103,10 @@
                         <td>@sale.Count</td>
                         <td>@sale.Price</td>
                         <td>
-                            <form method="post">
-                                <input type="submit" asp-page-handler="DeleteSale" asp-route-id="@sale.Upc" class="btn btn-danger" value="Delete">
+                            <form method="post" asp-page-handler="DeleteSale">
+                                <input name="id" hidden value="@Model.CurrentCheck.Number" />
+                                <input name="upc" hidden value="@sale.Upc" />
+                                <input type="submit" class="btn btn-danger" value="Delete">
                             </form>
                         </td>
                     </tr>
