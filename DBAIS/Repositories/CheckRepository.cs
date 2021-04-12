@@ -361,7 +361,7 @@ namespace DBAIS.Repositories
             await using var reader = await query.ExecuteReaderAsync();
             reader.Read();
 
-            return reader.GetInt32(0);
+            return reader.GetValueOrDefault<int>(0);
         }
     }
 
