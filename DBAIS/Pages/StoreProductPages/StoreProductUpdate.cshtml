@@ -31,10 +31,10 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-3">
-                        <input asp-for="Price" class="form-control" value=@(Model.StoreProduct != null ? Model.StoreProduct.Price : 0.01)>
+                        <input asp-for="Price" min="0" class="form-control" value=@(Model.StoreProduct != null ? Model.StoreProduct.Price : 0.01)>
                     </div>
                     <div class="col-3">
-                        <input asp-for="Count" class="form-control" value=@(Model.StoreProduct != null ? Model.StoreProduct.Count : 0)>
+                        <input asp-for="Count" min="0" class="form-control" value=@(Model.StoreProduct != null ? Model.StoreProduct.Count : 0)>
                     </div>
                 </div>
                 <br />

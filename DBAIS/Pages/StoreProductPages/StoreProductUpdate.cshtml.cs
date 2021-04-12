@@ -23,11 +23,9 @@ namespace DBAIS.Pages.StoreProductPages
 
         // Form data
         [BindProperty]
-        [Range(0.01, 1000000000)]
         public decimal Price { get; set; }
 
         [BindProperty]
-        [Range(0,int.MaxValue)]
         public int Count { get; set; }
 
         [BindProperty]
