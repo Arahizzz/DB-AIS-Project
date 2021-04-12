@@ -23,7 +23,7 @@ namespace DBAIS.Pages.CheckPages
 
         public string IdEmployee { get; set; }
 
-        [BindProperty] public DateTime PrintDate { get; set; } = DateTime.Now;
+        [BindProperty] [DataType(DataType.Date)] public DateTime PrintDate { get; set; } = DateTime.Now;
 
         [BindProperty] [Range(0, 100)] public int Vat { get; set; } = 20;
 

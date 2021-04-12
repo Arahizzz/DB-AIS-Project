@@ -27,6 +27,7 @@ namespace DBAIS.Pages.CheckPages
 
 
         [BindProperty]
+        [DataType(DataType.Date)]
         public DateTime PrintDate { get; set; }
 
 
