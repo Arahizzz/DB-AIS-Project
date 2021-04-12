@@ -20,7 +20,7 @@ CREATE TABLE Role
     role_name varchar(25) primary key 
 );
 
-CREATE TABLE "Employee"
+CREATE TABLE Employee
 (
     id_employee     varchar(10) primary key,
     empl_surname    varchar(50)    not null,
