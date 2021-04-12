@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DBAIS.Pages.CheckPages
 {
-    [Authorize(Roles = "manager")]
+    [Authorize(Roles = "cashier, manager")]
     public class CheckUpdateModel : PageModel
     {
 
@@ -22,20 +22,13 @@ namespace DBAIS.Pages.CheckPages
 
         // Form data
         [BindProperty]
-        [MaxLength(10)]
+        [MaxLength(13)]
         public string? CardNumber { get; set; }
 
 
         [BindProperty]
         public DateTime PrintDate { get; set; }
 
-        [BindProperty]
-        [Range(0, int.MaxValue)]
-        public int Total { get; set; }
-
-        [BindProperty]
-        [Range(0, 100)]
-        public int Vat { get; set; }
 
         public List<SelectListItem> EmployeeOptions { get; set; }
         public List<SelectListItem> CardsOptions { get; set; }
@@ -44,20 +37,28 @@ namespace DBAIS.Pages.CheckPages
         private readonly EmployeeRepository _employeeRepository;
         private readonly CheckRepository _checkRepository;
         private readonly CustomerRepository _customerRepository;
+        private readonly StoreProductRepository _storeProductRepository;
         private readonly UserManager<EmployeeUser> _userManager;
+
 
         public EmployeeUser UserInfo { get; set; }
 
-        public CheckUpdateModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository, UserManager<EmployeeUser> userManager)
+        public CheckUpdateModel(CheckRepository checkRepository, EmployeeRepository employeeRepository, CustomerRepository customerRepository, UserManager<EmployeeUser> userManager, StoreProductRepository storeProductRepository)
         {
             _checkRepository = checkRepository;
             _employeeRepository = employeeRepository;
             _customerRepository = customerRepository;
             _userManager = userManager;
+            _storeProductRepository = storeProductRepository;
         }
 
         private async Task InitModel(string id)
         {
+            UserInfo = await _userManager.FindByNameAsync(User.Identity.Name);
+
+            var checks = await _checkRepository.GetChecks(null, null, null);
+            CurrentCheck = checks.Find(x => x.Number.Equals(id));
+
             var employees = await _employeeRepository.GetCashiers(Sort.None);
             EmployeeOptions = employees.Select(e =>
                                   new SelectListItem
@@ -67,19 +68,14 @@ namespace DBAIS.Pages.CheckPages
                                   }).ToList();
             var cards = await _customerRepository.GetCards(null);
             CardsOptions = new List<SelectListItem>();
-            CardsOptions.Add(new SelectListItem
-            {
-                Value = "",
-                Text = "-"
-            });
             CardsOptions.AddRange(cards.Select(c =>
                                   new SelectListItem
                                   {
                                       Value = c.Number,
-                                      Text = c.Number
+                                      Text = c.Number,
+                                      Selected = c.Number.Equals(CurrentCheck.CardNum)
                                   }).ToList());
-            var checks = await _checkRepository.GetChecks(null, null, null);
-            CurrentCheck = checks.Find(x => x.Number.Equals(id));
+            PrintDate = CurrentCheck.Date;
         }
         public async Task<IActionResult> OnGetAsync(string? id)
         {
@@ -95,7 +91,7 @@ namespace DBAIS.Pages.CheckPages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostCreateSale([FromForm] string id, [FromForm] string upc, [FromForm] int count, [FromForm] decimal price)
+        public async Task<IActionResult> OnPostCreateSale([FromForm] string id, [FromForm] string upc, [FromForm] int count)
         {
             if (id == null)
             {
@@ -106,17 +102,31 @@ namespace DBAIS.Pages.CheckPages
             {
                 return NotFound();
             }
-            var newSale = new Sale
+            try
             {
-                Check = id,
-                Upc = upc,
-                Count = count,
-                Price = price
-            };
-            CurrentCheck.Sales.Add(newSale);
-            var newTotal = CurrentCheck.Sales.Sum(x => x.Price);
-            CurrentCheck.Total = newTotal;
-            await _checkRepository.UpdateCheck(CurrentCheck);
+                var prod = await _storeProductRepository.GetProduct(upc);
+                if (prod.Count < count)
+                {
+                    ModelState.AddModelError("", "There are only " + prod.Count + " units of " + prod.Upc + " product in the storage");
+                    return Page();
+                }
+                var newSale = new Sale
+                {
+                    Check = id,
+                    Upc = upc,
+                    Count = count,
+                    Price = prod.Price
+                };
+                CurrentCheck.Sales.Add(newSale);
+                var newTotal = CurrentCheck.Sales.Sum(x => x.Price * x.Count);
+                CurrentCheck.Total = newTotal;
+            
+                await _checkRepository.UpdateCheck(CurrentCheck);
+            }
+            catch
+            {
+                ModelState.AddModelError("","Wrong upc entered");
+            }
             await InitModel(id);
             return Page();
         }
@@ -133,7 +143,7 @@ namespace DBAIS.Pages.CheckPages
             {
                 return NotFound();
             }
-            var newTotal = CurrentCheck.Sales.Sum(x => x.Price);
+            var newTotal = CurrentCheck.Sales.Sum(x => x.Price*x.Count);
             CurrentCheck.Total = newTotal;
             await _checkRepository.UpdateCheck(CurrentCheck);
             await InitModel(id);
@@ -142,23 +152,25 @@ namespace DBAIS.Pages.CheckPages
 
         public async Task<IActionResult> OnPostAsync([FromRoute] string id)
         {
+            await InitModel(id);
             if (!ModelState.IsValid)
             {
-                await InitModel(id);
                 return Page();
             }
             else
             {
-                /*var newProduct = new StoreProduct
+                var newTotal = CurrentCheck.Sales.Sum(x => x.Price * x.Count);
+                var newCheck = new Check
                 {
-                    Upc = id,
-                    ProductId = Int32.Parse(ProductId),
-                    IsPromotion = IsPromotion,
-                    UpcPromotional = IsPromotion ? UpcPromotional : null,
-                    Price = Price,
-                    Count = Count
+                    CardNum = CardNumber != "" ? CardNumber : null,
+                    Date = PrintDate,
+                    Sales = CurrentCheck.Sales,
+                    EmployeeId = CurrentCheck.EmployeeId,
+                    Number = id,
+                    Total = newTotal,
+                    Vat = CurrentCheck.Vat
                 };
-                await _storeProductRepository.UpdateProduct(newProduct);*/
+                await _checkRepository.UpdateCheck(newCheck);
                 return Redirect("/checks");
             }
         }

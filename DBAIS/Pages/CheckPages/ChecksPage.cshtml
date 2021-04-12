@@ -94,6 +94,10 @@
                 {
                     <a asp-page="CheckUpdate" asp-route-id="@check.Number" class=" text-primary link-primary">Update</a>
                 }
+                @if (User.IsInRole("cashier"))
+                {
+                    <a asp-page="CheckUpdate" asp-route-id="@check.Number" class=" text-primary link-primary">Info</a>
+                }
             </td>
             <td>
                 @if (User.IsInRole("manager"))

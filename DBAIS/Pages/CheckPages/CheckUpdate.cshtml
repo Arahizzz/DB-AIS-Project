@@ -31,22 +31,12 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-3">
-                        <p>Total: @Model.Total</p>
-                    </div>
-                    <div class="col-3">
-                        <label asp-for="Vat">Vat</label>
-                        <input asp-for="Vat" class="form-control" placeholder="VAT">
-                    </div>
-                </div>
-                <br />
-                <div class="row">
-                    <div class="col-3">
                         <label asp-for="PrintDate">Print date</label>
-                        <input asp-for="PrintDate" class="form-control" placeholder="Date printed">
+                        <input asp-for="PrintDate" class="form-control" placeholder="Date printed" value="@Model.PrintDate.Date.ToString("yyyy-MM-dd")">
                     </div>
                     <div class="col-3">
                         <label asp-for="CardNumber">Card number</label>
-                        <input asp-for="CardNumber" class="form-control" placeholder="Card number">
+                        <select asp-for="CardNumber" asp-items="@Model.CardsOptions" class="form-control" placeholder="Card number"></select>
                     </div>
                 </div>
                 <br />
@@ -56,37 +46,43 @@
                             <button type="button" class="btn btn-secondary">Cancel</button>
                         </a>
                     </div>
-                    <div class="col-2">
-                        <input type="submit" class="btn btn-success" value="Update Check">
-                    </div>
+                    @if (User.IsInRole("manager"))
+                    {
+                        <div class="col-2">
+                            <input type="submit" class="btn btn-success" value="Update Check Info">
+                        </div>
+                    }
                 </div>
             </div>
         </form>
 
-        <hr/>
-        @{
+        @if (User.IsInRole("manager"))
+        {
             var header2 = "Add products to check";
-        }
-        <partial name="_EditPageHeader" model="@header2" />
-        <form method="post" asp-page-handler="CreateSale">
-            <div class="form-group">
-                <div class="row">
-                    <input name="id" hidden value="@Model.CurrentCheck.Number" />
-                    <div class="col-2">
-                        <input type="text" name="upc" class="form-control" placeholder="UPC">
-                    </div>
-                    <div class="col-2">
-                        <input type="number" name="count" class="form-control" placeholder="Count">
-                    </div>
-                    <div class="col-2">
-                        <input type="number" name="price" class="form-control" placeholder="Price">
-                    </div>
-                    <div class="col-2">
-                        <input type="submit" class="btn btn-success" value="Create Sale">
+            <partial name="_EditPageHeader" model="@header2" />
+            <form method="post" asp-page-handler="CreateSale">
+                <div class="form-group">
+                    <div class="row">
+                        <input name="id" hidden value="@Model.CurrentCheck.Number" />
+                        <div class="col-2">
+                            <input type="text" name="upc" class="form-control" placeholder="UPC" required>
+                        </div>
+                        <div class="col-2">
+                            <input type="number" min="1" name="count" class="form-control" placeholder="Count" required>
+                        </div>
+                        <div class="col-2">
+                            <input type="submit" class="btn btn-success" value="Create Sale">
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        }
+        @if (User.IsInRole("cashier"))
+        {
+            var header2 = "Check products";
+            <partial name="_EditPageHeader" model="@header2" />
+        }
+        <hr />
         <table class="table">
             <thead>
                 <tr>
@@ -103,11 +99,14 @@
                         <td>@sale.Count</td>
                         <td>@sale.Price</td>
                         <td>
-                            <form method="post" asp-page-handler="DeleteSale">
-                                <input name="id" hidden value="@Model.CurrentCheck.Number" />
-                                <input name="upc" hidden value="@sale.Upc" />
-                                <input type="submit" class="btn btn-danger" value="Delete">
-                            </form>
+                            @if (User.IsInRole("manager"))
+                            {
+                                <form method="post" asp-page-handler="DeleteSale">
+                                    <input name="id" hidden value="@Model.CurrentCheck.Number" />
+                                    <input name="upc" hidden value="@sale.Upc" />
+                                    <input type="submit" class="btn btn-danger" value="Delete">
+                                </form>
+                            }
                         </td>
                     </tr>
                 }
